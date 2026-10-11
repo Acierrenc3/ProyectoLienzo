@@ -16,6 +16,12 @@
 - `docs/` — diseño y referencia de la API (`docs/api/`).
 - Los archivos `.uasset` y `.umap` son binarios de UEFN: **no los edites**.
 
+## Lecciones aprendidas (UEFN 6.0 / Verse)
+- Los campos de posición del editor van en orden **Izquierda, Arriba, Adelante** (ver `docs/MONTAJE_FASE1.md`).
+- Una comparación no es `logic`: usa `logic{A >= B}`.
+- Los `data members` no pueden inicializarse con funciones `<localizes>` (error 3582): asigna textos en un método (`SetText`).
+- Los errores completos del compilador están en `%LOCALAPPDATA%\UnrealEditorFortnite\Saved\Logs\UnrealEditorFortnite.log` (buscar `Script error`).
+
 ## Convenciones de Verse
 - Un sistema por archivo: `battle_manager.verse`, `combatant.verse`, `battle_ui.verse`…
 - Nombres de tipos y funciones en inglés (`snake_case` para tipos, `PascalCase` para funciones y campos, como en la API de Epic). Comentarios en español.

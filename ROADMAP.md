@@ -38,7 +38,7 @@ Cada issue debe caber en **una sesión de Claude Code**: un sistema o archivo co
 
 - [x] `editor` Crear el proyecto UEFN en blanco `ProyectoLienzo` en `D:\Mods`.
 - [x] `editor` Instalar Git y **Git LFS**; crear el repo en GitHub (privado) y subir este contenido.
-- [ ] `editor` Localizar los archivos `*.digest.verse` que genera UEFN (la referencia de la API de Verse) y copiarlos a `docs/api/`, para que Claude Code los consulte.
+- [x] `editor` Copiar los `*.digest.verse` de UEFN a `docs/api/` (están en `%LOCALAPPDATA%\UnrealEditorFortnite\Saved\VerseProject\ProyectoLienzo\Digests\BuiltIn`).
 - [x] `editor` Anotar en `CLAUDE.md` la ruta donde van los `.verse` (`Content/`).
 - [x] `verse` Dispositivo de prueba `hello_device.verse` que imprime un mensaje al empezar la partida (compila correctamente).
 - [x] `diseño` Rellenar `docs/DISENO.md`: tono, mundo, nombre definitivo (**Contratiempo**) y los 3 héroes.
@@ -51,16 +51,18 @@ Cada issue debe caber en **una sesión de Claude Code**: un sistema o archivo co
 
 **Objetivo:** puedo ganar o perder un combate **1 contra 1** con menú de turnos y esquiva.
 
-- [ ] `verse` `battle_manager`: máquina de estados del combate (Inicio → Turno jugador → Turno enemigo → Victoria/Derrota).
-- [ ] `verse` `combatant`: clase con vida, ataque, defensa y velocidad; se usa igual para héroes y enemigos.
-- [ ] `verse` Interfaz del menú de turno (Atacar, Habilidad, Objeto, Huir) con barras de vida.
-- [ ] `verse` Ataque del enemigo con **aviso** y **ventana de esquiva**: si el jugador pulsa la tecla a tiempo, no recibe daño.
-- [ ] `verse` Pantalla de victoria y derrota.
-- [ ] `editor` Arena de combate, cámara fija, teletransporte de entrada y salida, y dispositivo de entrada para la tecla de esquiva.
-- [ ] `editor` Enemigo provisional (NPC o criatura) con animación básica.
+- [x] `verse` `battle_manager`: máquina de estados del combate (Inicio → Turno jugador → Turno enemigo → Victoria/Derrota).
+- [x] `verse` `combatant`: clase con vida, ataque, defensa y velocidad; se usa igual para héroes y enemigos.
+- [x] `verse` Interfaz del menú de turno (Atacar, Habilidad, Objeto, Huir) con vida en texto (barras gráficas: pendiente).
+- [x] `verse` Ataque del enemigo con **aviso** y **ventana de esquiva** (+ Contratiempo adelantado de la Fase 2).
+- [x] `verse` Pantalla de victoria y derrota.
+- [x] `editor` Arena de combate, cámara fija, teletransporte de entrada y salida, y dispositivo de entrada para la tecla de esquiva (ver `docs/MONTAJE_FASE1.md`).
+- [x] `editor` Enemigo provisional (bloque Graybox animado con `MoveTo`).
 - [ ] `diseño` Primeros números: vida, daño y duración de la ventana de esquiva.
 
 **Riesgo clave:** aunque sea para un jugador, Fortnite funciona con servidor y hay **latencia de entrada**. Empezar con ventanas generosas (unos 400 ms) y ajustar probando.
+
+- [ ] Probar en sesión y ajustar ventanas de esquiva/bloqueo.
 
 **Hecho cuando:** un amigo que no conoce el juego entiende el combate sin explicaciones.
 
