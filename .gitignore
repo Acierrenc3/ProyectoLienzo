@@ -1,0 +1,14 @@
+# Generado por UEFN / Unreal
+Intermediate/
+Saved/
+DerivedDataCache/
+Binaries/
+.urc/
+.lore/
+.vscode/
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
