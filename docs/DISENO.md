@@ -1,27 +1,61 @@
-# Documento de diseño
+# Contratiempo — Documento de diseño
 
-> Se rellena durante la Fase 0 y se amplía en cada fase.
+> Nombre del juego: **Contratiempo**. Nombre del repositorio y del proyecto UEFN: `ProyectoLienzo`.
+> RPG por turnos para **un jugador** en Fortnite (UEFN + Verse). Juego original.
 
 ## Concepto
-_Una frase que resuma el juego._
+Un RPG por turnos en el que esquivar y bloquear **al ritmo** de los ataques enemigos lo es todo. En música, un *contratiempo* es una nota que cae fuera del pulso.
 
-## Mundo y tono
-_Ambientación, estilo visual, inspiraciones generales (sin copiar ninguna obra)._
+## Mundo
+Un archipiélago de islas costeras que vive al compás de **la Campana Mayor**, un faro-campana gigante que marca el ritmo del mundo: mareas, estaciones, latidos. La campana se ha agrietado y **el Silencio** se extiende: lo que toca se vuelve gris y queda inmóvil como piedra.
+
+- **Tono:** melancólico pero esperanzador; apto para el público de Fortnite.
+- **Estilo visual:** contraste entre zonas vivas y coloridas y zonas tomadas por el Silencio (desaturadas, con niebla), conseguido con volúmenes de postprocesado de UEFN.
+- **Sonido:** protagonista. Cada enemigo y cada ataque tiene una firma rítmica reconocible.
+
+## El jugador: el Director / la Directora
+La última persona capaz de oír la melodía. Explora con su propia skin de Fortnite; en combate **dirige** al trío de héroes: elige sus acciones y marca los tiempos de esquiva y bloqueo.
 
 ## Héroes
-| Héroe | Rol | Estilo de combate |
-|---|---|---|
-| | | |
-| | | |
-| | | |
+| Héroe | Rol | Arma | Mecánica única |
+|---|---|---|---|
+| **Oria**, la Percusionista | Daño / aguante | Martillo-tambor | **Ritmo**: contador que sube con cada acción bien sincronizada y aumenta su daño; se reinicia al fallar. |
+| **Joel**, el Afinador | Apoyo | Diapasón | **Armonía**: cura y da PA; si el grupo actúa en el orden que él marca, todos reciben una bonificación. |
+| **Kesh**, la Callada | Control | Campanillas rotas | **Eco del Silencio**: silencia a un enemigo (pierde su turno) a cambio de vida propia. Antigua criatura del Silencio: misterio central de la historia. |
 
 ## Combate
-- Vida, ataque, defensa, velocidad.
-- Puntos de acción (PA): cuántos se ganan y cuánto cuestan las habilidades.
-- Esquiva: ventana de ~400 ms, evita el daño.
-- Bloqueo perfecto: ventana más corta, devuelve PA y permite contraataque.
-
-## Enemigos
-| Enemigo | Patrón de ataque | Debilidad |
+| Elemento | Descripción | Valor inicial |
 |---|---|---|
-| | | |
+| Estadísticas | Vida, Ataque, Defensa, Velocidad (orden de turnos) | — |
+| Puntos de acción (PA) | Atacar da PA; las habilidades los gastan | +1 por ataque, máx. 9 |
+| **Compás** | Cada ataque enemigo tiene aviso sonoro y visual con su ritmo propio | — |
+| **Esquiva** | Pulsar en la ventana: evita el daño | ~400 ms (ajustar) |
+| **Contratiempo** (bloqueo perfecto) | Ventana más corta: anula el daño, devuelve PA y lanza un contraataque | ~200 ms (ajustar) |
+| **Crescendo** | Barra común que se llena con contratiempos; permite un ataque combinado del trío (Fase 4) | — |
+
+**Equipo:** cada héroe usa un **instrumento** (arma) y puede equipar **partituras** con efectos pasivos.
+
+## Enemigos: los Mudos
+Criaturas de piedra nacidas del Silencio.
+
+| Enemigo | Patrón | Notas |
+|---|---|---|
+| **Badajo** | Golpes lentos y pesados, ritmo regular | Enemigo de tutorial |
+| **Coro Hueco** | Grupo que ataca a la vez o en canon | Enseña a esquivar en cadena |
+| **Sordina** | Anula mejoras del grupo | Prioridad de objetivo |
+
+## Acto 1 — "La Grieta"
+| Zona | Contenido | Se une |
+|---|---|---|
+| **Puerto Calma** | Pueblo inicial y tutorial | Oria |
+| **Bosque de Juncos** | El viento hace sonar los juncos; la música avisa de los peligros | Joel |
+| **Fundición de la Campana** | Kesh aparece como enemiga y acaba uniéndose | Kesh |
+
+**Jefes:**
+- **El Metrónomo Roto**: máquina gigante que cambia de tempo a mitad del combate.
+- **La Soprano Hueca**: gritos en oleadas que hay que esquivar en cadena.
+
+**Puntos de descanso:** pequeños faros donde se recupera vida y PA, se guarda la partida y reaparecen los enemigos.
+
+## Propiedad intelectual
+Solo tomamos la *estructura de combate* (turnos con reacciones en tiempo real), que es una mecánica de juego. Nada de nombres, personajes, historia, arte ni música de otros juegos.

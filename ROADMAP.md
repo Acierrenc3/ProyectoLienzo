@@ -1,4 +1,4 @@
-# Roadmap — Proyecto Lienzo (nombre provisional)
+# Roadmap — Contratiempo (proyecto `ProyectoLienzo`)
 
 Un RPG por turnos **para un solo jugador** en Fortnite (UEFN + Verse), inspirado en las *mecánicas* de los JRPG modernos con reacciones en tiempo real: combate por turnos, esquivar y bloquear en el momento justo, puntos de acción y un grupo de héroes.
 
@@ -37,11 +37,11 @@ Cada issue debe caber en **una sesión de Claude Code**: un sistema o archivo co
 **Objetivo:** repositorio y proyecto UEFN funcionando, y un primer `.verse` compilado por Claude Code.
 
 - [x] `editor` Crear el proyecto UEFN en blanco `ProyectoLienzo` en `D:\Mods`.
-- [ ] `editor` Instalar Git y **Git LFS**; crear el repo en GitHub y subir este contenido (`.gitignore` y `.gitattributes` ya incluidos).
+- [x] `editor` Instalar Git y **Git LFS**; crear el repo en GitHub (privado) y subir este contenido.
 - [ ] `editor` Localizar los archivos `*.digest.verse` que genera UEFN (la referencia de la API de Verse) y copiarlos a `docs/api/`, para que Claude Code los consulte.
 - [x] `editor` Anotar en `CLAUDE.md` la ruta donde van los `.verse` (`Content/`).
-- [ ] `verse` Dispositivo de prueba `hello_device.verse` que imprime un mensaje al empezar la partida.
-- [ ] `diseño` Rellenar `docs/DISENO.md`: tono, mundo, nombre definitivo y los 3 héroes.
+- [x] `verse` Dispositivo de prueba `hello_device.verse` que imprime un mensaje al empezar la partida (compila correctamente).
+- [x] `diseño` Rellenar `docs/DISENO.md`: tono, mundo, nombre definitivo (**Contratiempo**) y los 3 héroes.
 
 **Hecho cuando:** el ciclo completo (issue → Claude Code → compilar → probar → PR) ha funcionado una vez.
 

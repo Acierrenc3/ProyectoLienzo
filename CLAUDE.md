@@ -1,7 +1,7 @@
 # CLAUDE.md — Instrucciones para Claude Code
 
 ## Proyecto
-RPG por turnos para **un solo jugador** en Fortnite, hecho con UEFN y Verse. Combate por turnos con reacciones en tiempo real (esquiva y bloqueo), puntos de acción y un grupo de 3 héroes. Consulta `ROADMAP.md` para la fase actual y `docs/DISENO.md` para el diseño.
+**Contratiempo**: RPG por turnos para **un solo jugador** en Fortnite, hecho con UEFN y Verse. Combate por turnos con reacciones en tiempo real (esquiva y bloqueo), puntos de acción y un grupo de 3 héroes. Consulta `ROADMAP.md` para la fase actual y `docs/DISENO.md` para el diseño (mundo, héroes Oria/Joel/Kesh, enemigos y valores de combate). Los valores de `DISENO.md` son la fuente de verdad para los números.
 
 **El juego es original.** No uses nombres, personajes, textos ni referencias de *Clair Obscur: Expedition 33* ni de otros juegos.
 
