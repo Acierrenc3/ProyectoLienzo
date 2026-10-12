@@ -72,15 +72,18 @@ Cada issue debe caber en **una sesión de Claude Code**: un sistema o archivo co
 
 **Objetivo:** el combate tiene decisiones interesantes y recompensa la habilidad.
 
-- [ ] `verse` **Puntos de acción (PA):** atacar da PA, las habilidades los gastan.
-- [ ] `verse` **Bloqueo perfecto** (ventana más corta que la esquiva): devuelve PA y permite un contraataque.
-- [ ] `verse` Habilidades definidas como **datos** (nombre, coste, daño, efecto), para añadir más sin tocar la lógica.
-- [ ] `verse` Combos enemigos de varios golpes con ritmos distintos.
-- [ ] `verse` Estados alterados: quemadura, aturdimiento, debilidad.
-- [ ] `verse` Combates contra **varios enemigos** y selección de objetivo.
-- [ ] `verse` Números de daño flotantes y mensajes de "¡Esquiva!" / "¡Bloqueo perfecto!".
-- [ ] `diseño` 6–8 habilidades y 3 tipos de enemigo con patrones distintos.
+- [x] `verse` **Puntos de acción (PA):** atacar da PA, las habilidades los gastan.
+- [x] `verse` **Bloqueo perfecto** (Contratiempo): devuelve PA y contraataca.
+- [x] `verse` Habilidades definidas como **datos** en `combat_data.verse`.
+- [x] `verse` Combos enemigos de varios golpes con ritmos distintos (Coro Hueco: 3 golpes).
+- [x] `verse` Estados alterados: Quemadura, Aturdimiento, Debilidad.
+- [x] `verse` Combates contra **varios enemigos** (hasta 3) y selección de objetivo.
+- [~] `verse` Mensajes de "¡Esquiva!" / "¡Contratiempo!" / "¡Demasiado pronto!" (números flotantes: pendiente).
+- [~] `diseño` 3 habilidades de Oria y 3 tipos de enemigo con patrones distintos (faltan habilidades de Joel y Kesh).
 - [ ] `arte` Efectos de Niagara para golpes y bloqueos.
+
+- [x] `verse` Mecánica **Ritmo** de Oria (+daño por esquivas y Contratiempos seguidos).
+- [ ] Probar en sesión y equilibrar números.
 
 **Hecho cuando:** jugar bien (bloqueos perfectos, buen uso de PA) se nota claramente en el resultado.
 

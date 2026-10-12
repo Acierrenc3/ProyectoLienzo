@@ -35,14 +35,27 @@ La última persona capaz de oír la melodía. Explora con su propia skin de Fort
 
 **Equipo:** cada héroe usa un **instrumento** (arma) y puede equipar **partituras** con efectos pasivos.
 
+## Habilidades de Oria (Fase 2)
+| Habilidad | Coste | Efecto |
+|---|---|---|
+| Redoble | 3 PA | 2,5× daño a un objetivo |
+| Golpe Sordo | 2 PA | 1,2× daño + Aturdimiento 1 turno |
+| Tambor Ígneo | 4 PA | 0,9× daño a todos + Quemadura 3 turnos |
+
+## Estados alterados
+- **Quemadura:** pierde un 6 % de la vida máxima al empezar su turno.
+- **Aturdimiento:** pierde el turno.
+- **Debilidad:** hace un 25 % menos de daño.
+- **Ritmo (Oria):** +1 por esquiva, +2 por Contratiempo (máx. 10); +10 % de daño por punto; vuelve a 0 al recibir un golpe.
+
 ## Enemigos: los Mudos
 Criaturas de piedra nacidas del Silencio.
 
 | Enemigo | Patrón | Notas |
 |---|---|---|
-| **Badajo** | Golpes lentos y pesados, ritmo regular | Enemigo de tutorial |
-| **Coro Hueco** | Grupo que ataca a la vez o en canon | Enseña a esquivar en cadena |
-| **Sordina** | Anula mejoras del grupo | Prioridad de objetivo |
+| **Badajo** | "Campanazo": 1 golpe lento (preparación 1,2–2,0 s) | 150 PV · Ataque 22 · Enemigo de tutorial |
+| **Coro Hueco** | "Canon": 3 golpes (preparación 1,0–1,6 s, luego 0,7 s y 0,5 s) al 70 % | 90 PV · Ataque 12 · Enseña a esquivar en cadena |
+| **Sordina** | "Apagón": 1 golpe rápido (0,9–1,5 s); si entra, Débil 2 turnos | 70 PV · Ataque 10 · Prioridad de objetivo |
 
 ## Acto 1 — "La Grieta"
 | Zona | Contenido | Se une |

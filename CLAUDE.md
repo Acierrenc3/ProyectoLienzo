@@ -20,6 +20,8 @@
 - Los campos de posición del editor van en orden **Izquierda, Arriba, Adelante** (ver `docs/MONTAJE_FASE1.md`).
 - Una comparación no es `logic`: usa `logic{A >= B}`.
 - Los `data members` no pueden inicializarse con funciones `<localizes>` (error 3582): asigna textos en un método (`SetText`).
+- Las funciones `<decides>` se llaman con corchetes: `logic{MiFuncion[X]}`, nunca con paréntesis.
+- No llames funciones `<suspends>` dentro de la condición de un `if`: guarda el resultado antes (`R := F()` y luego `if (X := R?)`). Para bucles con llamadas `<suspends>`, usa `loop` con índice en vez de `for`.
 - Los errores completos del compilador están en `%LOCALAPPDATA%\UnrealEditorFortnite\Saved\Logs\UnrealEditorFortnite.log` (buscar `Script error`).
 
 ## Convenciones de Verse

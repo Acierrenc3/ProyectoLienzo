@@ -15,6 +15,11 @@ Dispositivos colocados en `ProyectoLienzo.umap` y enlazados al `battle_manager`.
 | `DodgeInput` | Gatillo de entrada | — | Entrada: **Personalizado 4 (Saltar)** = barra espaciadora |
 | `EnemyProp` | Graybox Wall Small C (`Fortnite/GrayBox/Props`) | (-800, 0, 350), escala 2 | Modelo provisional del Badajo |
 
+| `ExtraEnemyProps[0]` | Graybox Wall Small C2 (Coro Hueco) | (-1150, 0, 250), escala 1,4 | |
+| `ExtraEnemyProps[1]` | Graybox Wall Small C3 (Sordina) | (-450, 0, 250), escala 1,1 | |
+
+`AutoStartDelay` = 4 (PRUEBAS: el combate empieza solo; poner -1 antes de publicar).
+
 El `battle_manager` tiene **"Visible en partida" desactivado**.
 
 ## Cómo probar
