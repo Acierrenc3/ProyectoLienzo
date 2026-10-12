@@ -1,13 +1,16 @@
-# battle_manager.verse — Gestor del combate por turnos (Fase 2: Oria contra hasta 3 Mudos).
+# battle_manager.verse — Gestor del juego: exploración (Fase 3) y combate por turnos (Fases 1-2).
 #
 # Dispositivos que hay que colocar en UEFN y enlazar en el panel Detalles:
-#   StartTrigger     (trigger_device)                      -> al pisarlo empieza el combate
+#   StartTrigger     (trigger_device)                      -> combate de prueba contra los 3 Mudos
 #   ArenaSpot        (teleporter_device)                   -> posición del jugador en la arena
-#   ReturnSpot       (teleporter_device)                   -> adonde vuelve el jugador al terminar
+#   ReturnSpot       (teleporter_device)                   -> salida de la arena si no hay posición guardada
 #   BattleCamera     (gameplay_camera_fixed_point_device)  -> cámara fija de la arena
 #   DodgeInput       (input_trigger_device)                -> tecla de esquiva / bloqueo
-#   EnemyProp        (creative_prop)                       -> modelo del primer enemigo (Badajo)
-#   ExtraEnemyProps  ([]creative_prop, opcional)           -> modelos del 2.º y 3.er enemigo
+#   EnemyProp        (creative_prop)                       -> modelo del 1.er enemigo en la arena
+#   ExtraEnemyProps  ([]creative_prop)                     -> modelos del 2.º y 3.er enemigo en la arena
+#   Encounters       ([]encounter_spot)                    -> enemigos del mapa (marcador + tipos de enemigo)
+#   RestSpots        ([]rest_spot)                         -> faros de descanso
+#   Chests           ([]chest_spot)                        -> cofres con tónicos
 using { /Fortnite.com/Devices }
 using { /Fortnite.com/Characters }
 using { /Verse.org/Simulation }
@@ -43,13 +46,22 @@ battle_manager := class(creative_device):
     @editable EnemyProp:creative_prop = creative_prop{}
     @editable ExtraEnemyProps:[]creative_prop = array{}
 
+    # --- Exploración (Fase 3) ---
+    @editable Encounters:[]encounter_spot = array{}
+    @editable RestSpots:[]rest_spot = array{}
+    @editable Chests:[]chest_spot = array{}
+    # Distancia (cm) a la que un marcador se activa.
+    @editable TriggerRadius:float = 250.0
+    # Probabilidad de encontrar un tónico al ganar un combate (0 a 1).
+    @editable TonicDropChance:float = 0.35
+
     # Ventanas de reacción en segundos antes del impacto (ver docs/DISENO.md).
     @editable DodgeWindow:float = 0.40
     @editable ParryWindow:float = 0.20
     # Margen tras el impacto que aún cuenta (compensa la latencia).
     @editable LateGrace:float = 0.08
-    # PRUEBAS: si es mayor que 0, el combate empieza solo tras estos segundos. Poner -1 antes de publicar.
-    @editable AutoStartDelay:float = 4.0
+    # PRUEBAS: si es mayor que 0, un combate de prueba empieza solo tras estos segundos.
+    @editable AutoStartDelay:float = -1.0
 
     CounterMultiplier:float = 0.5
     MaxAP:int = 9
@@ -61,53 +73,167 @@ battle_manager := class(creative_device):
     var InBattle:logic = false
     var AP:int = 0
     var Items:int = 0
+    # El héroe y su vida persisten entre combates.
+    var PartyHero:combatant = combatant{Name := "Oria", MaxHP := 120, Attack := 18, Defense := 6, Speed := 10}
+    var MaybeExplore:?explore_ui = false
+    # Punto de reaparición tras una derrota (último faro visitado).
+    var MaybeRespawn:?transform = false
 
     OnBegin<override>()<suspends>:void =
+        set PartyHero = MakeOria()
+        PartyHero.ResetForBattle()
+        set Items = StartingItems
         StartTrigger.TriggeredEvent.Subscribe(OnStartTriggered)
-        if (AutoStartDelay > 0.0):
-            Sleep(AutoStartDelay)
-            loop:
-                if (Player := GetPlayspace().GetPlayers()[0]):
-                    if (not InBattle?):
-                        set InBattle = true
-                        spawn{ RunBattle(Player) }
-                    break
-                Sleep(1.0)
+
+        # Esperamos al jugador (juego para un solo jugador).
+        var MaybePlayer:?player = false
+        loop:
+            if (First := GetPlayspace().GetPlayers()[0]):
+                set MaybePlayer = option{First}
+                break
+            Sleep(0.5)
+        if (Player := MaybePlayer?):
+            if (UI := GetPlayerUI[Player]):
+                Explore := explore_ui{PlayerUI := UI}
+                Explore.Init()
+                set MaybeExplore = option{Explore}
+                Explore.Show()
+                UpdateExploreHud()
+                Explore.Notify("El Silencio se extiende por Puerto Calma...")
+            if (AutoStartDelay > 0.0):
+                Sleep(AutoStartDelay)
+                StartBattle(Player, TestEncounter(), false)
+            ExploreLoop(Player)
 
     OnStartTriggered(MaybeAgent:?agent):void =
         if (not InBattle?, Agent := MaybeAgent?, Player := player[Agent]):
-            set InBattle = true
-            spawn{ RunBattle(Player) }
+            spawn{ StartBattle(Player, TestEncounter(), false) }
 
-    # Crea los enemigos del encuentro: uno por cada prop colocado (máximo 3).
-    BuildEnemies():[]enemy_slot =
+    # --- Exploración ---
+
+    # Comprueba varias veces por segundo si el jugador está cerca de un marcador.
+    ExploreLoop(Player:player)<suspends>:void =
+        loop:
+            Sleep(0.2)
+            if (not InBattle?, Character := Player.GetFortCharacter[]):
+                Position := Character.GetTransform().Translation
+                CheckChests(Position)
+                CheckRestSpots(Position)
+                MaybeEncounter := FindEncounter(Position)
+                if (Encounter := MaybeEncounter?):
+                    Outcome := StartBattle(Player, Encounter.Enemies, true)
+                    AfterEncounter(Player, Encounter, Outcome)
+
+    # Devuelve el encuentro activo más cercano dentro del radio (o nada). Rearma los lejanos.
+    FindEncounter(Position:vector3):?encounter_spot =
+        var Found:?encounter_spot = false
+        for (Encounter : Encounters, not Encounter.Defeated?):
+            Dist := Distance(Position, Encounter.Marker.GetTransform().Translation)
+            if (Dist > TriggerRadius * 1.6):
+                set Encounter.Armed = true
+            else if (Dist <= TriggerRadius, Encounter.Armed?, not Found?):
+                set Found = option{Encounter}
+        Found
+
+    AfterEncounter(Player:player, Encounter:encounter_spot, Outcome:battle_outcome):void =
+        if (Outcome = battle_outcome.Victory):
+            set Encounter.Defeated = true
+            Encounter.Marker.Hide()
+            if (GetRandomFloat(0.0, 1.0) < TonicDropChance):
+                set Items = Items + 1
+                Notify("¡Victoria! Encuentras un tónico.")
+            else:
+                Notify("¡Victoria!")
+        else if (Outcome = battle_outcome.Fled):
+            # Hay que alejarse para que el encuentro vuelva a activarse.
+            set Encounter.Armed = false
+            Notify("Has huido. Aléjate para recuperar el aliento.")
+        else:
+            PartyHero.ResetForBattle()
+            set Encounter.Armed = false
+            if (Respawn := MaybeRespawn?, Character := Player.GetFortCharacter[]):
+                if (Character.TeleportTo[Respawn.Translation, Respawn.Rotation]) {}
+            Notify("Despiertas junto al último faro.")
+        UpdateExploreHud()
+
+    CheckRestSpots(Position:vector3):void =
+        for (Rest : RestSpots):
+            Dist := Distance(Position, Rest.Marker.GetTransform().Translation)
+            if (Dist > TriggerRadius * 1.6):
+                set Rest.Armed = true
+            else if (Dist <= TriggerRadius, Rest.Armed?):
+                set Rest.Armed = false
+                PartyHero.ResetForBattle()
+                # Reaparecemos un poco delante del faro.
+                RestTransform := Rest.Marker.GetTransform()
+                Respawn := transform{
+                    Translation := RestTransform.Translation + vector3{X := 250.0, Y := 0.0, Z := 50.0},
+                    Rotation := RestTransform.Rotation,
+                    Scale := vector3{X := 1.0, Y := 1.0, Z := 1.0}}
+                set MaybeRespawn = option{Respawn}
+                for (Encounter : Encounters):
+                    set Encounter.Defeated = false
+                    Encounter.Marker.Show()
+                Notify("Descansas junto al faro. Vida recuperada. Los Mudos regresan...")
+                UpdateExploreHud()
+
+    CheckChests(Position:vector3):void =
+        for (Chest : Chests, not Chest.Opened?):
+            if (Distance(Position, Chest.Marker.GetTransform().Translation) <= TriggerRadius):
+                set Chest.Opened = true
+                Chest.Marker.Hide()
+                set Items = Items + Chest.Tonics
+                Notify("Cofre: +{Chest.Tonics} tónico(s).")
+                UpdateExploreHud()
+
+    Notify(Text:string):void =
+        if (Explore := MaybeExplore?):
+            Explore.Notify(Text)
+
+    UpdateExploreHud():void =
+        if (Explore := MaybeExplore?):
+            Explore.SetHeroLine("{PartyHero.Name}   PV {PartyHero.HP}/{PartyHero.MaxHP}   Tónicos {Items}")
+
+    # --- Combate ---
+
+    # Crea los enemigos del combate con los props de la arena (máximo 3) y oculta los que sobran.
+    BuildEnemies(Kinds:[]enemy_kind):[]enemy_slot =
         Props:[]creative_prop = array{EnemyProp} + ExtraEnemyProps
-        Fighters := EncounterEnemies()
-        for (Index -> Prop : Props, Fighter := Fighters[Index]):
+        for (Index -> Prop : Props, Index >= Kinds.Length):
+            Prop.Hide()
+        for (Index -> Kind : Kinds, Prop := Props[Index]):
+            Fighter := MakeEnemy(Kind)
             Fighter.ResetForBattle()
             enemy_slot{Fighter := Fighter, Prop := Prop, Home := Prop.GetTransform()}
 
     # Combate completo: entrar en la arena, jugar los turnos y volver.
-    RunBattle(Player:player)<suspends>:void =
-        if (UI := GetPlayerUI[Player]):
-            Hero := MakeOria()
-            Hero.ResetForBattle()
-            Enemies := BuildEnemies()
+    # ReturnToSpot = true: el jugador vuelve exactamente a donde estaba.
+    StartBattle(Player:player, Kinds:[]enemy_kind, ReturnToSpot:logic)<suspends>:battle_outcome =
+        var Outcome:battle_outcome = battle_outcome.Fled
+        if (not InBattle?, UI := GetPlayerUI[Player]):
+            set InBattle = true
+            var MaybeSaved:?transform = false
+            if (ReturnToSpot?, Character := Player.GetFortCharacter[]):
+                set MaybeSaved = option{Character.GetTransform()}
+            if (Explore := MaybeExplore?):
+                Explore.Hide()
+
+            PartyHero.ClearStatus()
+            Enemies := BuildEnemies(Kinds)
             set AP = 0
-            set Items = StartingItems
 
             Screen := battle_ui{PlayerUI := UI}
             Screen.Init()
             EnterArena(Player, Enemies)
             Screen.Show()
-            Refresh(Screen, Hero, Enemies)
+            Refresh(Screen, PartyHero, Enemies)
             if (Enemies.Length > 1):
                 Screen.SetMessage("¡Los Mudos te rodean!")
             else:
                 Screen.SetMessage("¡Un Mudo bloquea el camino!")
             Sleep(1.5)
 
-            Outcome := BattleLoop(Hero, Enemies, Screen)
+            set Outcome = BattleLoop(PartyHero, Enemies, Screen)
             Screen.HideMenu()
             if (Outcome = battle_outcome.Victory):
                 Screen.SetMessage("¡Victoria! Los Mudos vuelven a ser piedra.")
@@ -115,11 +241,15 @@ battle_manager := class(creative_device):
                 Screen.SetMessage("Derrota... El Silencio te alcanza.")
             else:
                 Screen.SetMessage("Huyes del combate.")
-            Sleep(3.0)
+            Sleep(2.5)
 
             Screen.Hide()
-            ExitArena(Player, Enemies)
-        set InBattle = false
+            ExitArena(Player, Enemies, MaybeSaved)
+            if (Explore := MaybeExplore?):
+                Explore.Show()
+            UpdateExploreHud()
+            set InBattle = false
+        Outcome
 
     EnterArena(Player:player, Enemies:[]enemy_slot):void =
         for (Slot : Enemies):
@@ -130,11 +260,16 @@ battle_manager := class(creative_device):
         if (Character := Player.GetFortCharacter[]):
             Character.PutInStasis(stasis_args{AllowTurning := false, AllowFalling := true, AllowEmotes := false})
 
-    ExitArena(Player:player, Enemies:[]enemy_slot):void =
+    ExitArena(Player:player, Enemies:[]enemy_slot, MaybeSaved:?transform):void =
         if (Character := Player.GetFortCharacter[]):
             Character.ReleaseFromStasis()
         BattleCamera.RemoveFrom(Player)
-        ReturnSpot.Teleport(Player)
+        # Vuelta exacta al punto del encuentro; si no hay posición guardada, al ReturnSpot.
+        var Returned:logic = false
+        if (Saved := MaybeSaved?, Character := Player.GetFortCharacter[], Character.TeleportTo[Saved.Translation, Saved.Rotation]):
+            set Returned = true
+        if (not Returned?):
+            ReturnSpot.Teleport(Player)
         for (Slot : Enemies):
             Slot.Prop.Show()
             if (Slot.Prop.TeleportTo[Slot.Home]) {}

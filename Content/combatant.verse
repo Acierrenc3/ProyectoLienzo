@@ -40,6 +40,13 @@ combatant := class:
         set WeakTurns = 0
         set Rhythm = 0
 
+    # Quita estados y Ritmo pero conserva la vida (la vida del héroe persiste entre combates).
+    ClearStatus():void =
+        set BurnTurns = 0
+        set StunTurns = 0
+        set WeakTurns = 0
+        set Rhythm = 0
+
     # Tiene éxito si el combatiente está fuera de combate.
     IsDefeated()<transacts><decides>:void =
         HP <= 0

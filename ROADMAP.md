@@ -93,12 +93,13 @@ Cada issue debe caber en **una sesión de Claude Code**: un sistema o archivo co
 
 **Objetivo:** recorrer una zona, encontrar enemigos y volver al mismo sitio tras combatir.
 
-- [ ] `verse` `encounter_manager`: al tocar un enemigo en el mapa empieza su combate; al ganar, desaparece.
-- [ ] `verse` Guardar y restaurar la posición del jugador al entrar y salir de la arena.
-- [ ] `verse` **Puntos de descanso:** recuperan vida y PA, guardan el progreso y reaparecen los enemigos.
-- [ ] `verse` Cofres con objetos y recompensas tras el combate.
-- [ ] `editor` Primera zona jugable (pequeña): camino, 4–5 encuentros y un punto de descanso.
+- [x] `verse` Encuentros en el mapa (`world.verse` + `battle_manager`): al acercarse empieza el combate; al ganar, desaparece.
+- [x] `verse` Guardar y restaurar la posición del jugador al entrar y salir de la arena.
+- [x] `verse` **Faros:** curan, marcan el punto de reaparición tras una derrota y hacen reaparecer a los enemigos (guardado persistente: Fase 4).
+- [x] `verse` Cofres con tónicos y tónico aleatorio (35 %) tras ganar. Vida y tónicos persisten entre combates.
+- [~] `editor` Zona de prueba con bloques grises: 4 encuentros, 1 faro y 1 cofre (falta el escenario real de Puerto Calma).
 - [ ] `editor` Transición visual al entrar en combate (fundido a negro o efecto de pantalla).
+- [x] Probado en sesión (12-oct-2026): encuentros, vuelta al sitio, huida, faro, cofre y derrota OK.
 
 **Hecho cuando:** se juegan 10–15 minutos seguidos sin tocar el editor.
 

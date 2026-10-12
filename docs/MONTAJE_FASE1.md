@@ -30,3 +30,18 @@ El `battle_manager` tiene **"Visible en partida" desactivado**.
    - ≤ 0,20 s antes → **Contratiempo** (sin daño, +1 PA, contraataque)
    - ≤ 0,40 s antes → **Esquiva** (sin daño)
    - antes de eso, o sin pulsar → recibes el golpe.
+
+## Zona de exploración (Fase 3)
+
+Marcadores: duplicados de *Graybox Wall Small* enlazados en los arrays del `battle_manager`.
+
+| Campo | Marcador | Posición (Izq, Arriba, Adelante) | Contenido |
+|---|---|---|---|
+| `Encounters[0]` | C4 | (600, 0, 600) | Badajo |
+| `Encounters[1]` | C5 | (1000, 0, 1200) | Coro Hueco |
+| `Encounters[2]` | C6 | (400, 0, 1700) | Badajo + Sordina |
+| `Encounters[3]` | C7 (escala 1,7) | (1300, 0, 400) | Badajo + Coro Hueco + Sordina |
+| `RestSpots[0]` | C8 (alto: 0,6 / 3,5 / 0,6) | (300, 0, -300) | Faro |
+| `Chests[0]` | C9 (bajo: 0,8 / 0,4 / 0,8) | (1400, 0, 1500) | 1 tónico |
+
+`TriggerRadius` = 250 cm · `TonicDropChance` = 0,35 · `AutoStartDelay` = -1 (desactivado).

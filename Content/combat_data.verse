@@ -52,6 +52,20 @@ MakeSordina():combatant =
         Speed := 8
         Pattern := attack_pattern{Name := "Apagón", MinWindup := 0.9, MaxWindup := 1.5, WeakTurns := 2}
 
-# Orden en que aparecen los enemigos según los props colocados en la arena.
-EncounterEnemies():[]combatant =
-    array{MakeBadajo(), MakeCoroHueco(), MakeSordina()}
+# Tipos de enemigo que se pueden elegir en el editor para cada encuentro.
+enemy_kind := enum:
+    Badajo
+    CoroHueco
+    Sordina
+
+MakeEnemy(Kind:enemy_kind):combatant =
+    if (Kind = enemy_kind.CoroHueco):
+        MakeCoroHueco()
+    else if (Kind = enemy_kind.Sordina):
+        MakeSordina()
+    else:
+        MakeBadajo()
+
+# Encuentro de prueba (Activador y AutoStartDelay): los tres Mudos.
+TestEncounter():[]enemy_kind =
+    array{enemy_kind.Badajo, enemy_kind.CoroHueco, enemy_kind.Sordina}

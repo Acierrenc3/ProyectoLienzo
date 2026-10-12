@@ -142,3 +142,44 @@ MakeMenuSlot(W:widget):stack_box_slot =
         Widget := W
         HorizontalAlignment := horizontal_alignment.Fill
         Padding := margin{Top := 6.0, Bottom := 6.0}
+
+# Interfaz durante la exploración: estado del héroe y mensajes.
+explore_ui := class:
+    PlayerUI:player_ui
+    HeroText:text_block = text_block{DefaultTextColor := NamedColors.White, DefaultTextSize := 24.0}
+    MessageText:text_block = text_block{DefaultTextColor := NamedColors.Gold, DefaultTextSize := 30.0}
+    var MaybeHud:?canvas = false
+    var Visible:logic = false
+    # Cada mensaje nuevo invalida el borrado programado del anterior.
+    var MessageId:int = 0
+
+    Init():void =
+        Hud := canvas:
+            Slots := array:
+                MakeSlot(MessageText, 0.50, 0.10)
+                MakeSlot(HeroText, 0.15, 0.80)
+        set MaybeHud = option{Hud}
+
+    Show():void =
+        if (not Visible?, Hud := MaybeHud?):
+            PlayerUI.AddWidget(Hud, player_ui_slot{InputMode := ui_input_mode.None})
+            set Visible = true
+
+    Hide():void =
+        if (Visible?, Hud := MaybeHud?):
+            PlayerUI.RemoveWidget(Hud)
+            set Visible = false
+
+    SetHeroLine(Text:string):void =
+        HeroText.SetText(ToMessage(Text))
+
+    # Muestra un mensaje y lo borra pasados unos segundos.
+    Notify(Text:string):void =
+        set MessageId = MessageId + 1
+        MessageText.SetText(ToMessage(Text))
+        spawn{ ClearLater(MessageId) }
+
+    ClearLater(Id:int)<suspends>:void =
+        Sleep(4.0)
+        if (Id = MessageId):
+            MessageText.SetText(ToMessage(""))
