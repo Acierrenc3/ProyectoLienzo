@@ -62,7 +62,7 @@ Cada issue debe caber en **una sesión de Claude Code**: un sistema o archivo co
 
 **Riesgo clave:** aunque sea para un jugador, Fortnite funciona con servidor y hay **latencia de entrada**. Empezar con ventanas generosas (unos 400 ms) y ajustar probando.
 
-- [ ] Probar en sesión y ajustar ventanas de esquiva/bloqueo.
+- [x] Probado en sesión (12-oct-2026): esquiva con espacio OK, ventanas de 0,4 s / 0,2 s bien ajustadas.
 
 **Hecho cuando:** un amigo que no conoce el juego entiende el combate sin explicaciones.
 
@@ -78,12 +78,12 @@ Cada issue debe caber en **una sesión de Claude Code**: un sistema o archivo co
 - [x] `verse` Combos enemigos de varios golpes con ritmos distintos (Coro Hueco: 3 golpes).
 - [x] `verse` Estados alterados: Quemadura, Aturdimiento, Debilidad.
 - [x] `verse` Combates contra **varios enemigos** (hasta 3) y selección de objetivo.
-- [~] `verse` Mensajes de "¡Esquiva!" / "¡Contratiempo!" / "¡Demasiado pronto!" (números flotantes: pendiente).
+- [x] `verse` Mensajes de "¡Esquiva!" / "¡Contratiempo!" / "¡Demasiado pronto!" (números flotantes: pendiente).
 - [~] `diseño` 3 habilidades de Oria y 3 tipos de enemigo con patrones distintos (faltan habilidades de Joel y Kesh).
 - [ ] `arte` Efectos de Niagara para golpes y bloqueos.
 
 - [x] `verse` Mecánica **Ritmo** de Oria (+daño por esquivas y Contratiempos seguidos).
-- [ ] Probar en sesión y equilibrar números.
+- [x] Probado en sesión (12-oct-2026): menús, objetivos, habilidades, estados, Ritmo, combos de 3 golpes y fin de combate OK. Duración y legibilidad correctas.
 
 **Hecho cuando:** jugar bien (bloqueos perfectos, buen uso de PA) se nota claramente en el resultado.
 
