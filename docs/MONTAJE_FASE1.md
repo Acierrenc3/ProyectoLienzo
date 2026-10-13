@@ -95,3 +95,25 @@ Nota: un guardado antiguo con `PartySize` 3 no se reduce al cambiar `StartingPar
 | `Encounters[7]` | C20 | (-1400, 0, 1600) | Diapasón + Fuelle + Badajo | 2 |
 | `Encounters[8]` | C21 | (400, 0, 2500) | Eco Errante + Diapasón | 4 |
 | `Encounters[9]` | C22 | (1400, 0, 2400) | Gárgola Coral + Eco Errante | 4 |
+
+### Ambientación de las zonas (prefabricados de Fortnite)
+
+Cada prefabricado tiene un actor raíz ("Raíz de set de juego"); moviendo la raíz se mueve todo el conjunto.
+
+| Zona | Prefabricado (carpeta Prefabricados) | Raíz en (Izq, Arriba, Adelante) |
+|---|---|---|
+| Puerto Calma | Faro › Lockie's Lighthouse | (1536, 0, -512) |
+| Fundición | Fábrica › Slant (taller de ladrillo) | (-2560, 0, 1024) |
+| Torre | Fortaleza Feudal › Castillo de Fortaleza Feudal | (700, 0, 3600) |
+
+Descartados: la fábrica grande (703 piezas, tapaba los encuentros) y la plaza de la Fortaleza (demasiado pesada).
+
+## Música (Fase 5)
+
+Tres dispositivos **Radio** junto a la consola; `battle_manager` los enciende y apaga desde Verse.
+
+| Campo | Dispositivo | Pista | Ajustes |
+|---|---|---|---|
+| `ExploreMusic` | Radio | Music_StW_Ambient_Login01 | Sin límite de distancia · fundidos de 1 s |
+| `BattleMusic` | Radio2 | Music_StW_Low_Combat01 | Igual |
+| `BossMusic` | Radio3 | Music_StW_High_Combat01 | Igual |

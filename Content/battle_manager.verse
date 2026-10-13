@@ -79,6 +79,11 @@ battle_manager := class(creative_device):
     # Diálogo al empezar la partida por primera vez (activa la marca 1).
     @editable IntroLines:[]string = array{}
 
+    # --- Música (Fase 5): dispositivos Radio con música de Fortnite ---
+    @editable ExploreMusic:radio_device = radio_device{}
+    @editable BattleMusic:radio_device = radio_device{}
+    @editable BossMusic:radio_device = radio_device{}
+
     # Ventanas de reacción en segundos antes del impacto (ver docs/DISENO.md).
     @editable DodgeWindow:float = 0.40
     @editable ParryWindow:float = 0.20
@@ -121,6 +126,9 @@ battle_manager := class(creative_device):
             Sleep(0.5)
         if (Player := MaybePlayer?):
             LoadGame(Player)
+            BattleMusic.Stop()
+            BossMusic.Stop()
+            ExploreMusic.Play()
             if (UI := GetPlayerUI[Player]):
                 Explore := explore_ui{PlayerUI := UI}
                 Explore.Init()
@@ -486,6 +494,7 @@ battle_manager := class(creative_device):
         var Outcome:battle_outcome = battle_outcome.Fled
         if (not InBattle?, UI := GetPlayerUI[Player]):
             set InBattle = true
+            PlayBattleMusic(Kinds)
             var MaybeSaved:?transform = false
             if (ReturnToSpot?, Character := Player.GetFortCharacter[]):
                 set MaybeSaved = option{Character.GetTransform()}
@@ -528,8 +537,23 @@ battle_manager := class(creative_device):
             if (Explore := MaybeExplore?):
                 Explore.Show()
             UpdateExploreHud()
+            BattleMusic.Stop()
+            BossMusic.Stop()
+            ExploreMusic.Play()
             set InBattle = false
         Outcome
+
+    # Cambia a la música de combate (o de jefe si hay un jefe en el grupo enemigo).
+    PlayBattleMusic(Kinds:[]enemy_kind):void =
+        ExploreMusic.Stop()
+        var IsBossFight:logic = false
+        for (Kind : Kinds):
+            if (Kind = enemy_kind.MetronomoRoto or Kind = enemy_kind.SopranoHueca):
+                set IsBossFight = true
+        if (IsBossFight?):
+            BossMusic.Play()
+        else:
+            BattleMusic.Play()
 
     # Experiencia, subidas de nivel y tónico aleatorio.
     GrantVictoryRewards(Enemies:[]enemy_slot, Screen:battle_ui)<suspends>:void =
