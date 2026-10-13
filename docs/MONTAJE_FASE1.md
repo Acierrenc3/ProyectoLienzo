@@ -171,4 +171,11 @@ Modelos originales hechos por código (`tools/generar_modelos.py`), sin recursos
 
 `battle manager` › **EnemyModels** (10 elementos, `Kind` + `Prop` + `YawDegrees` = 180): Badajo, Coro Hueco, Sordina, Metrónomo Roto, Soprano Hueca, Yunque, Fuelle, Diapasón, Eco Errante, Gárgola Coral, cada uno con su `PB`. Al empezar un combate, `BuildEnemies` lleva el modelo de cada tipo al hueco de la arena (`EnemyProp`, `ExtraEnemyProps`), oculta el prop provisional de ese hueco y lo gira hacia la cámara. Si un tipo no tiene modelo, se usa el prop provisional como antes. Al empezar la partida y antes de cada combate, los modelos vuelven al almacén ocultos.
 
-Las 5 espadas (`PB_Espada_*`) están creadas pero aún no colocadas: pensadas para el equipo de los héroes o como decoración.
+Espadas junto a los héroes (`battle manager` › **HeroWeaponProps**, mismo orden que `HeroProps`; aparecen y desaparecen con su héroe):
+
+| Actor | Héroe | Posición (Izq, Arriba, Adelante) | Rotación |
+|---|---|---|---|
+| PB Espada FiloDiapason | Joel (`HeroWeaponProps[0]`) | (−1140, 125, −8380) | (0, 0, 180): clavada con la empuñadura arriba |
+| PB Espada CampanaRota | Kesh (`HeroWeaponProps[1]`) | (−460, 125, −8380) | (0, 0, 180) |
+
+Clave de Sol, Corchea y Batuta Mayor siguen sin colocar.

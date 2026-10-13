@@ -10,6 +10,7 @@
 #   EnemyProp        (creative_prop)                       -> modelo del 1.er enemigo en la arena
 #   ExtraEnemyProps  ([]creative_prop)                     -> modelos del 2.º y 3.er enemigo en la arena
 #   HeroProps        ([]creative_prop, opcional)           -> modelos de Joel y Kesh en la arena
+#   HeroWeaponProps  ([]creative_prop, opcional)           -> espadas junto a Joel y Kesh (mismo orden que HeroProps)
 #   EnemyModels      ([]enemy_model, opcional)             -> modelos 3D por tipo de enemigo (sustituyen a los
 #                                                             props provisionales de la arena)
 #   Encounters       ([]encounter_spot)                    -> enemigos del mapa (marcador + tipos de enemigo)
@@ -69,6 +70,7 @@ battle_manager := class(creative_device):
     @editable EnemyProp:creative_prop = creative_prop{}
     @editable ExtraEnemyProps:[]creative_prop = array{}
     @editable HeroProps:[]creative_prop = array{}
+    @editable HeroWeaponProps:[]creative_prop = array{}
     @editable EnemyModels:[]enemy_model = array{}
 
     # --- Exploración (Fase 3) ---
@@ -713,6 +715,12 @@ battle_manager := class(creative_device):
                 Prop.Show()
             else:
                 Prop.Hide()
+        # Su espada aparece y desaparece con cada héroe.
+        for (Index -> Weapon : HeroWeaponProps):
+            if (Party[Index + 1]):
+                Weapon.Show()
+            else:
+                Weapon.Hide()
         ArenaSpot.Teleport(Player)
         BattleCamera.AddTo(Player)
         if (Character := Player.GetFortCharacter[]):
