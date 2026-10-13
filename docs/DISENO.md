@@ -94,13 +94,20 @@ Criaturas de piedra nacidas del Silencio.
 | **Badajo** | "Campanazo": 1 golpe lento (preparación 1,2–2,0 s) | 150 PV · Ataque 22 · Enemigo de tutorial |
 | **Coro Hueco** | "Canon": 3 golpes (preparación 1,0–1,6 s, luego 0,7 s y 0,5 s) al 70 % | 90 PV · Ataque 12 · Enseña a esquivar en cadena |
 | **Sordina** | "Apagón": 1 golpe rápido (0,9–1,5 s); si entra, Débil 2 turnos | 70 PV · Ataque 10 · Prioridad de objetivo |
+| **Yunque** (Fundición) | "Martillazo": preparación muy larga (1,6–2,6 s) y repetición a los 0,4 s, al 80 % | 220 PV · Ataque 28 · Defensa 7 · Muy lento |
+| **Fuelle** (Fundición) | "Soplido": 1 golpe con aviso impredecible (0,5–2,4 s) | 80 PV · Ataque 14 · El más rápido de la zona |
+| **Diapasón** (Fundición) | "Vibración": golpea a todo el grupo al 70 % (1,1–1,7 s) | 110 PV · Ataque 13 |
+| **Eco Errante** (Torre) | "Reverberación": 4 golpes a ritmo fijo (0,45 s) al 55 %; si entran, Débil 1 turno | 100 PV · Ataque 11 · Velocidad 13 |
+| **Gárgola Coral** (Torre) | "Grito de piedra": 2 golpes a todo el grupo al 65 % | 260 PV · Ataque 20 · Defensa 9 |
+| **Metrónomo Roto** (jefe 1) | "Péndulo" 2 golpes; en fase 2 "Allegro", 4 golpes rápidos | 600 PV · Ataque 26 |
+| **Soprano Hueca** (jefe 2) | "Aria" a todo el grupo; en fase 2 "Coloratura", 4 golpes a todos y Débil | 750 PV · Ataque 24 |
 
 ## Acto 1 — "La Grieta"
 | Zona | Contenido | Se une |
 |---|---|---|
-| **Puerto Calma** | Pueblo inicial y tutorial | Oria |
-| **Bosque de Juncos** | El viento hace sonar los juncos; la música avisa de los peligros | Joel |
-| **Fundición de la Campana** | Kesh aparece como enemiga y acaba uniéndose | Kesh |
+| **Puerto Calma** | Pueblo inicial y tutorial (Badajo, Coro Hueco, Sordina) | Oria |
+| **Fundición de la Campana** | Taller del Metrónomo Roto (Yunque, Fuelle, Diapasón) | Joel |
+| **Torre de la Soprano** | Kesh, la antigua Muda; la Soprano Hueca (Eco Errante, Gárgola Coral) | Kesh |
 
 **Jefes:**
 - **El Metrónomo Roto**: máquina gigante que cambia de tempo a mitad del combate.

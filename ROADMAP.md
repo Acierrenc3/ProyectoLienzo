@@ -131,7 +131,7 @@ Cada issue debe caber en **una sesión de Claude Code**: un sistema o archivo co
 - [x] `verse` Sistema de diálogos y misiones sencillas (eventos de historia con marcas/flags, incorporación de Joel y Kesh).
 - [x] `verse` **2 jefes** con fases y mecánicas propias (Metrónomo Roto y Soprano Hueca). *Pendiente de prueba en sesión.*
 - [ ] `editor` 3 zonas conectadas con estilo visual propio.
-- [ ] `editor` ~8 tipos de enemigo repartidos por las zonas.
+- [x] `editor` ~8 tipos de enemigo repartidos por las zonas (8 normales + 2 jefes; Yunque, Fuelle, Diapasón, Eco Errante y Gárgola Coral nuevos). *Pendiente de prueba.*
 - [ ] `arte` Música y ambientación (original o con licencia).
 
 **Hecho cuando:** se puede jugar el Acto 1 de principio a fin.

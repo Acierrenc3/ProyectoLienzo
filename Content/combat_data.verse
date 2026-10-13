@@ -192,6 +192,63 @@ MakeSordina():combatant =
         XPReward := 20
         Pattern := attack_pattern{Name := "Apagón", MinWindup := 0.9, MaxWindup := 1.5, WeakTurns := 2}
 
+# --- Mudos de la Fundición (zona 2) ---
+# Yunque: muy lento, pero tras el primer golpe repite casi sin aviso.
+MakeYunque():combatant =
+    combatant:
+        Name := "Yunque"
+        MaxHP := 220
+        Attack := 28
+        Defense := 7
+        Speed := 5
+        XPReward := 45
+        Pattern := attack_pattern{Name := "Martillazo", MinWindup := 1.6, MaxWindup := 2.6, FollowUpGaps := array{0.4}, HitMultiplier := 0.8}
+
+# Fuelle: rápido e impredecible; su aviso puede ser muy corto o muy largo.
+MakeFuelle():combatant =
+    combatant:
+        Name := "Fuelle"
+        MaxHP := 80
+        Attack := 14
+        Defense := 2
+        Speed := 12
+        XPReward := 30
+        Pattern := attack_pattern{Name := "Soplido", MinWindup := 0.5, MaxWindup := 2.4}
+
+# Diapasón: su vibración alcanza a todo el grupo.
+MakeDiapason():combatant =
+    combatant:
+        Name := "Diapasón"
+        MaxHP := 110
+        Attack := 13
+        Defense := 4
+        Speed := 10
+        XPReward := 40
+        Pattern := attack_pattern{Name := "Vibración", MinWindup := 1.1, MaxWindup := 1.7, HitsAllHeroes := true, HitMultiplier := 0.7}
+
+# --- Mudos de la Torre (zona 3) ---
+# Eco Errante: cuatro golpes seguidos con el mismo ritmo; si entran, debilitan.
+MakeEcoErrante():combatant =
+    combatant:
+        Name := "Eco Errante"
+        MaxHP := 100
+        Attack := 11
+        Defense := 3
+        Speed := 13
+        XPReward := 45
+        Pattern := attack_pattern{Name := "Reverberación", MinWindup := 1.0, MaxWindup := 1.4, FollowUpGaps := array{0.45, 0.45, 0.45}, HitMultiplier := 0.55, WeakTurns := 1}
+
+# Gárgola Coral: muy resistente; grita dos veces a todo el grupo.
+MakeGargola():combatant =
+    combatant:
+        Name := "Gárgola Coral"
+        MaxHP := 260
+        Attack := 20
+        Defense := 9
+        Speed := 6
+        XPReward := 60
+        Pattern := attack_pattern{Name := "Grito de piedra", MinWindup := 1.3, MaxWindup := 2.0, FollowUpGaps := array{0.9}, HitsAllHeroes := true, HitMultiplier := 0.65}
+
 # --- Jefes del Acto 1 ---
 # El Metrónomo Roto: máquina gigante. En la segunda fase acelera el tempo (avisos más cortos y combos).
 MakeMetronomo():combatant =
@@ -228,6 +285,11 @@ enemy_kind := enum:
     Sordina
     MetronomoRoto
     SopranoHueca
+    Yunque
+    Fuelle
+    Diapason
+    EcoErrante
+    GargolaCoral
 
 MakeEnemy(EnemyKind:enemy_kind):combatant =
     if (EnemyKind = enemy_kind.CoroHueco):
@@ -238,6 +300,16 @@ MakeEnemy(EnemyKind:enemy_kind):combatant =
         MakeMetronomo()
     else if (EnemyKind = enemy_kind.SopranoHueca):
         MakeSoprano()
+    else if (EnemyKind = enemy_kind.Yunque):
+        MakeYunque()
+    else if (EnemyKind = enemy_kind.Fuelle):
+        MakeFuelle()
+    else if (EnemyKind = enemy_kind.Diapason):
+        MakeDiapason()
+    else if (EnemyKind = enemy_kind.EcoErrante):
+        MakeEcoErrante()
+    else if (EnemyKind = enemy_kind.GargolaCoral):
+        MakeGargola()
     else:
         MakeBadajo()
 

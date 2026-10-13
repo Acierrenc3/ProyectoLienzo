@@ -80,3 +80,18 @@ Guion completo en `docs/HISTORIA_ACTO1.md`. `StartingPartySize` = 1 (solo Oria; 
 | `StoryEvents[2]` La Campana herida | C18 | (-500, 0, 1700) | 0,3 / 2 / 0,3 | Requiere 5 · Activa 6 |
 
 Nota: un guardado antiguo con `PartySize` 3 no se reduce al cambiar `StartingPartySize`; para probar la historia desde cero, activar `ResetSaveOnStart` temporalmente.
+
+## Zonas y encuentros nuevos (Fase 5)
+
+| Zona | Lado del mapa | Contenido |
+|---|---|---|
+| Puerto Calma | Centro y derecha (C4–C9, faro C8) | Encounters 0–3, cofres |
+| Fundición | Izquierda (Izq negativo) | Joel (C14), Metrónomo (C15), Encounters 6–7 |
+| Torre | Al fondo (Adelante ≥ 1700) | Kesh (C16), Soprano (C17), final (C18), Encounters 8–9 |
+
+| Campo | Marcador (escala 1,7) | Posición (Izq, Arriba, Adelante) | Enemigos | Requiere |
+|---|---|---|---|---|
+| `Encounters[6]` | C19 | (-1300, 0, 700) | Yunque + Fuelle | 2 |
+| `Encounters[7]` | C20 | (-1400, 0, 1600) | Diapasón + Fuelle + Badajo | 2 |
+| `Encounters[8]` | C21 | (400, 0, 2500) | Eco Errante + Diapasón | 4 |
+| `Encounters[9]` | C22 | (1400, 0, 2400) | Gárgola Coral + Eco Errante | 4 |
