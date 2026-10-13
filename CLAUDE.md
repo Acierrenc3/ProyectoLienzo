@@ -24,6 +24,8 @@
 - No llames funciones `<suspends>` dentro de la condición de un `if`: guarda el resultado antes (`R := F()` y luego `if (X := R?)`). Para bucles con llamadas `<suspends>`, usa `loop` con índice en vez de `for`.
 - No uses el mismo nombre para un campo de la clase y una variable o parámetro de un método (p. ej. `Hero`, `Items`, `Kind`): Verse da error de identificador ambiguo.
 - Las funciones de módulo usadas dentro de `for`/`if` deben marcarse `<computes>` (si no, error de efecto `no_rollback`).
+- `option{...}` también es un contexto de fallo: calcula antes en una constante cualquier llamada sin `<computes>` y luego haz `option{Valor}`.
+- Los dispositivos (balizas, indicadores de mapa…) se pueden mover en partida con `Dispositivo.TeleportTo[Posición, IdentityRotation()]`.
 - Guardado: `var SaveTable:weak_map(player, save_data)` de ámbito de módulo con una clase `<persistable>` sin campos `var`.
 - Los errores completos del compilador están en `%LOCALAPPDATA%\UnrealEditorFortnite\Saved\Logs\UnrealEditorFortnite.log` (buscar `Script error`).
 

@@ -40,6 +40,11 @@ enemy_slot := class:
     Prop:creative_prop
     Home:transform
 
+# Siguiente objetivo del indicador: dónde está y qué texto mostrar.
+guide_target := class:
+    Position:vector3
+    Label:string
+
 # Un turno de la ronda: un héroe o un enemigo.
 turn_actor := class:
     Fighter:combatant
@@ -84,6 +89,10 @@ battle_manager := class(creative_device):
     @editable BattleMusic:radio_device = radio_device{}
     @editable BossMusic:radio_device = radio_device{}
 
+    # --- Indicador de objetivos (Fase 5): se mueven solos al siguiente objetivo ---
+    @editable GuideBeacon:beacon_device = beacon_device{}
+    @editable GuideMap:map_indicator_device = map_indicator_device{}
+
     # Ventanas de reacción en segundos antes del impacto (ver docs/DISENO.md).
     @editable DodgeWindow:float = 0.40
     @editable ParryWindow:float = 0.20
@@ -113,6 +122,11 @@ battle_manager := class(creative_device):
     var MaybeExplore:?explore_ui = false
     # Punto de reaparición tras una derrota (último faro visitado).
     var MaybeRespawn:?vector3 = false
+    # Objetivo actual del indicador.
+    var GuidePlayer:?player = false
+    var MaybeGuidePos:?vector3 = false
+    var GuideLabel:string = ""
+    var GuideTick:int = 0
 
     OnBegin<override>()<suspends>:void =
         StartTrigger.TriggeredEvent.Subscribe(OnStartTriggered)
@@ -125,6 +139,7 @@ battle_manager := class(creative_device):
                 break
             Sleep(0.5)
         if (Player := MaybePlayer?):
+            set GuidePlayer = option{Player}
             LoadGame(Player)
             BattleMusic.Stop()
             BossMusic.Stop()
@@ -172,6 +187,8 @@ battle_manager := class(creative_device):
             Hero
         set Items = Data.Items
         set OwnedPartituras = for (Code : Data.Owned, Code > 0) { PartituraFromInt(Code) }
+        for (Done : Data.ClearedEncounters, Encounter := Encounters[Done]):
+            set Encounter.Cleared = true
         for (Opened : Data.OpenedChests, Chest := Chests[Opened]):
             set Chest.Opened = true
             Chest.Marker.Hide()
@@ -193,6 +210,7 @@ battle_manager := class(creative_device):
             if (Hero := Party[Index]) then PartituraToInt(Hero.Equipped) else if (E := Old.Equipped[Index]) then E else 0
         NewOwned := for (P : OwnedPartituras) { PartituraToInt(P) }
         NewOpened := for (Index -> Chest : Chests, Chest.Opened?) { Index }
+        NewCleared := for (Index -> Encounter : Encounters, Encounter.Cleared?) { Index }
         var NewHasRespawn:logic = false
         var Point:vector3 = vector3{X := 0.0, Y := 0.0, Z := 0.0}
         if (Saved := MaybeRespawn?):
@@ -201,7 +219,7 @@ battle_manager := class(creative_device):
         CurrentItems := Items
         CurrentFlags := Flags
         CurrentSize := Party.Length
-        NewData := save_data{Levels := NewLevels, XPs := NewXPs, Items := CurrentItems, Tiers := NewTiers, Equipped := NewEquipped, Owned := NewOwned, OpenedChests := NewOpened, PartySize := CurrentSize, Flags := CurrentFlags, HasRespawn := NewHasRespawn, RespawnX := Point.X, RespawnY := Point.Y, RespawnZ := Point.Z}
+        NewData := save_data{Levels := NewLevels, XPs := NewXPs, Items := CurrentItems, Tiers := NewTiers, Equipped := NewEquipped, Owned := NewOwned, OpenedChests := NewOpened, ClearedEncounters := NewCleared, PartySize := CurrentSize, Flags := CurrentFlags, HasRespawn := NewHasRespawn, RespawnX := Point.X, RespawnY := Point.Y, RespawnZ := Point.Z}
         if (Player.IsActive[], set SaveTable[Player] = NewData) {}
 
     # --- Exploración ---
@@ -212,6 +230,9 @@ battle_manager := class(creative_device):
             Sleep(0.2)
             if (not InBattle?, not InMenu?, Character := Player.GetFortCharacter[]):
                 Position := Character.GetTransform().Translation
+                set GuideTick = GuideTick + 1
+                if (Mod[GuideTick, 5] = 0):
+                    UpdateGuideText(Position)
                 CheckChests(Player, Position)
                 CheckRestSpots(Player, Position)
                 MaybeStory := FindStoryEvent(Position)
@@ -238,10 +259,11 @@ battle_manager := class(creative_device):
     AfterEncounter(Player:player, Encounter:encounter_spot, Outcome:battle_outcome):void =
         if (Outcome = battle_outcome.Victory):
             set Encounter.Defeated = true
+            set Encounter.Cleared = true
             Encounter.Marker.Hide()
             if (Encounter.SetFlagOnWin > 0):
                 AddFlag(Encounter.SetFlagOnWin)
-                RefreshWorld()
+            RefreshWorld()
         else if (Outcome = battle_outcome.Fled):
             # Hay que alejarse para que el encuentro vuelva a activarse.
             set Encounter.Armed = false
@@ -402,6 +424,61 @@ battle_manager := class(creative_device):
                 Story.Marker.Show()
             else:
                 Story.Marker.Hide()
+        UpdateGuide()
+
+    # --- Indicador de objetivos ---
+    # Orden: combates pendientes de la zona, luego la historia y por último el jefe.
+    NextObjective():?guide_target =
+        var Found:?guide_target = false
+        for (Encounter : Encounters, not Found?, not Encounter.IsBoss?, not Encounter.Cleared?, not Encounter.Defeated?, HasFlag[Encounter.RequiredFlag]):
+            Names := EnemyNames(Encounter.Enemies)
+            Target := guide_target{Position := Encounter.Marker.GetTransform().Translation, Label := "Combate: {Names}"}
+            set Found = option{Target}
+        for (Story : StoryEvents, not Found?, StoryAvailable[Story]):
+            Target := guide_target{Position := Story.Marker.GetTransform().Translation, Label := "Alguien te espera"}
+            set Found = option{Target}
+        for (Encounter : Encounters, not Found?, Encounter.IsBoss?, not Encounter.Defeated?, HasFlag[Encounter.RequiredFlag]):
+            Names := EnemyNames(Encounter.Enemies)
+            Target := guide_target{Position := Encounter.Marker.GetTransform().Translation, Label := "Jefe: {Names}"}
+            set Found = option{Target}
+        Found
+
+    EnemyNames(Kinds:[]enemy_kind):string =
+        var Text:string = ""
+        for (Index -> Kind : Kinds):
+            if (Index > 0):
+                set Text = Text + ", "
+            set Text = Text + MakeEnemy(Kind).Name
+        Text
+
+    UpdateGuide():void =
+        MaybeTarget := NextObjective()
+        if (Target := MaybeTarget?):
+            set GuideLabel = Target.Label
+            set MaybeGuidePos = option{Target.Position}
+            if (GuideBeacon.TeleportTo[Target.Position, IdentityRotation()]) {}
+            if (GuideMap.TeleportTo[Target.Position, IdentityRotation()]) {}
+            GuideBeacon.Enable()
+            GuideMap.Enable()
+            if (Player := GuidePlayer?):
+                GuideMap.ActivateObjectivePulse(Player)
+        else:
+            set GuideLabel = ""
+            set MaybeGuidePos = false
+            GuideBeacon.Disable()
+            GuideMap.Disable()
+            if (Player := GuidePlayer?):
+                GuideMap.DeactivateObjectivePulse(Player)
+        if (Explore := MaybeExplore?):
+            if (GuideLabel = ""):
+                Explore.SetObjective("")
+            else:
+                Explore.SetObjective("Objetivo: {GuideLabel}")
+
+    # Actualiza la distancia al objetivo en el HUD.
+    UpdateGuideText(Position:vector3):void =
+        if (Target := MaybeGuidePos?, Explore := MaybeExplore?, Meters := Floor[Distance(Position, Target) / 100.0]):
+            Explore.SetObjective("Objetivo: {GuideLabel} · {Meters} m")
 
     # Un evento está disponible si se cumple su requisito y aún no se ha visto.
     StoryAvailable(Story:story_event)<transacts><decides>:void =

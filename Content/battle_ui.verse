@@ -170,6 +170,7 @@ explore_ui := class:
     PlayerUI:player_ui
     HeroText:text_block = text_block{DefaultTextColor := NamedColors.White, DefaultTextSize := 24.0}
     MessageText:text_block = text_block{DefaultTextColor := NamedColors.Gold, DefaultTextSize := 30.0}
+    ObjectiveText:text_block = text_block{DefaultTextColor := NamedColors.White, DefaultTextSize := 22.0}
     var MaybeHud:?canvas = false
     var Visible:logic = false
     # Cada mensaje nuevo invalida el borrado programado del anterior.
@@ -180,6 +181,7 @@ explore_ui := class:
             Slots := array:
                 MakeSlot(MessageText, 0.50, 0.10)
                 MakeSlot(HeroText, 0.15, 0.80)
+                MakeSlot(ObjectiveText, 0.15, 0.75)
         set MaybeHud = option{Hud}
 
     Show():void =
@@ -191,6 +193,9 @@ explore_ui := class:
         if (Visible?, Hud := MaybeHud?):
             PlayerUI.RemoveWidget(Hud)
             set Visible = false
+
+    SetObjective(Text:string):void =
+        ObjectiveText.SetText(ToMessage(Text))
 
     SetHeroLine(Text:string):void =
         HeroText.SetText(ToMessage(Text))

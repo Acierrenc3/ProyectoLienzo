@@ -15,6 +15,8 @@ save_data := class<final><persistable>:
     Owned:[]int = array{}
     # Índices de los cofres ya abiertos.
     OpenedChests:[]int = array{}
+    # Índices de los encuentros vencidos al menos una vez (para el indicador de objetivos).
+    ClearedEncounters:[]int = array{}
     # Historia: héroes en el grupo y marcas alcanzadas.
     PartySize:int = 1
     Flags:[]int = array{}

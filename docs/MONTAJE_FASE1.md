@@ -147,3 +147,9 @@ Tres dispositivos **Radio** junto a la consola; `battle_manager` los enciende y 
 | `ExploreMusic` | Radio | Music_StW_Ambient_Login01 | Sin límite de distancia · fundidos de 1 s |
 | `BattleMusic` | Radio2 | Music_StW_Low_Combat01 | Igual |
 | `BossMusic` | Radio3 | Music_StW_High_Combat01 | Igual |
+
+## Indicador de objetivos (Fase 5)
+
+`GuideBeacon` = **Baliza** (Dispositivos › IU, rayo de luz) y `GuideMap` = **Dispositivo indicador del mapa** (Dispositivos › IU). No hace falta colocarlos en un sitio concreto: `battle_manager` los teletransporta al siguiente objetivo y activa el pulso de dirección.
+
+Orden de los objetivos: primero los combates normales disponibles que aún no se han vencido nunca (en el orden de `Encounters`), después el evento de historia disponible y, por último, el jefe disponible. Los encuentros vencidos se guardan en `save_data.ClearedEncounters`, así que reaparecer en un faro no hace que el indicador vuelva atrás. En el HUD se muestra "Objetivo: … · N m".

@@ -16,6 +16,8 @@ encounter_spot := class<concrete>:
     # Diálogo antes del combate (formato "Nombre: texto").
     @editable IntroLines:[]string = array{}
     var Defeated:logic = false
+    # Vencido al menos una vez (no se reinicia en los faros): lo usa el indicador de objetivos.
+    var Cleared:logic = false
     # Se desarma tras huir: hay que alejarse para que vuelva a activarse.
     var Armed:logic = true
 
