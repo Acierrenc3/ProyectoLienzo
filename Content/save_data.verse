@@ -15,6 +15,9 @@ save_data := class<final><persistable>:
     Owned:[]int = array{}
     # Índices de los cofres ya abiertos.
     OpenedChests:[]int = array{}
+    # Historia: héroes en el grupo y marcas alcanzadas.
+    PartySize:int = 1
+    Flags:[]int = array{}
     # Último faro visitado (punto de reaparición).
     HasRespawn:logic = false
     RespawnX:float = 0.0

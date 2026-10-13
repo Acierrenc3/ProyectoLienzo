@@ -14,6 +14,8 @@ attack_pattern := class:
     HitMultiplier:float = 1.0
     # Turnos de Debilidad que aplica al héroe si el golpe entra.
     WeakTurns:int = 0
+    # Golpea a todo el grupo a la vez (una sola reacción protege a todos).
+    HitsAllHeroes:logic = false
 
 # Un participante del combate. Se usa igual para héroes y enemigos.
 combatant := class:
@@ -37,6 +39,10 @@ combatant := class:
     BurnOnAttack:logic = false
     # --- Enemigos ---
     XPReward:int = 0
+    # Jefes: al bajar de la mitad de vida cambian a su segundo patrón.
+    HasPhase2:logic = false
+    Phase2Pattern:attack_pattern = attack_pattern{}
+    Phase2Message:string = ""
 
     var HP:int = 0
     var AP:int = 0
@@ -47,6 +53,7 @@ combatant := class:
     var WeakTurns:int = 0     # Debilidad: hace un 25 % menos de daño
     # Ritmo (mecánica de Oria): sube con esquivas y Contratiempos, se reinicia al recibir un golpe.
     var Rhythm:int = 0
+    var InPhase2:logic = false
 
     # Deja el combatiente listo para un combate nuevo.
     ResetForBattle():void =

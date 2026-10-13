@@ -66,3 +66,17 @@ Marcadores: duplicados de *Graybox Wall Small* enlazados en los arrays del `batt
 | `Chests[2]` | C13 (1700, 0, 800) | 1 tónico + Partitura Ardiente |
 
 Las partituras Presto y Firme quedan para el contenido del Acto 1.
+
+## Historia y jefes (Fase 5)
+
+Guion completo en `docs/HISTORIA_ACTO1.md`. `StartingPartySize` = 1 (solo Oria; Joel y Kesh se unen por historia). `IntroLines` = 4 líneas de la intro.
+
+| Campo | Marcador | Posición (Izq, Arriba, Adelante) | Escala | Ajustes |
+|---|---|---|---|---|
+| `StoryEvents[0]` El Afinador | C14 | (-700, 0, 300) | 0,3 / 2 / 0,3 | Requiere 1 · Activa 2 · Se une Joel |
+| `Encounters[4]` Metrónomo Roto | C15 | (-900, 0, 1200) | 2,5 | Jefe · Requiere 2 · Activa 3 |
+| `StoryEvents[1]` La Callada | C16 | (0, 0, 1900) | 0,3 / 2 / 0,3 | Requiere 3 · Activa 4 · Se une Kesh |
+| `Encounters[5]` Soprano Hueca | C17 | (800, 0, 2000) | 2 / 3 / 2 | Jefe · Requiere 4 · Activa 5 |
+| `StoryEvents[2]` La Campana herida | C18 | (-500, 0, 1700) | 0,3 / 2 / 0,3 | Requiere 5 · Activa 6 |
+
+Nota: un guardado antiguo con `PartySize` 3 no se reduce al cambiar `StartingPartySize`; para probar la historia desde cero, activar `ResetSaveOnStart` temporalmente.

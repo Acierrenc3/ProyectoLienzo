@@ -14,6 +14,7 @@
 #   RestSpots        ([]rest_spot)                         -> faros de descanso
 #   Chests           ([]chest_spot)                        -> cofres con tónicos, partituras o Resina
 #   MenuInput        (input_trigger_device)                -> tecla para abrir el menú del grupo
+#   StoryEvents      ([]story_event)                       -> eventos de historia (diálogos, héroes que se unen)
 using { /Fortnite.com/Devices }
 using { /Fortnite.com/Characters }
 using { /Verse.org/Simulation }
@@ -73,6 +74,11 @@ battle_manager := class(creative_device):
     # Texto que se muestra para indicar la tecla del menú.
     @editable MenuKeyHint:string = "la tecla del menú"
 
+    # --- Historia (Fase 5) ---
+    @editable StoryEvents:[]story_event = array{}
+    # Diálogo al empezar la partida por primera vez (activa la marca 1).
+    @editable IntroLines:[]string = array{}
+
     # Ventanas de reacción en segundos antes del impacto (ver docs/DISENO.md).
     @editable DodgeWindow:float = 0.40
     @editable ParryWindow:float = 0.20
@@ -92,6 +98,8 @@ battle_manager := class(creative_device):
     var InBattle:logic = false
     var InMenu:logic = false
     var OwnedPartituras:[]partitura = array{}
+    # Marcas de historia alcanzadas.
+    var Flags:[]int = array{}
     var Items:int = 0
     # Rondas restantes de Armonía (Joel): +25 % de daño del grupo.
     var HarmonyTurns:int = 0
@@ -120,6 +128,13 @@ battle_manager := class(creative_device):
                 Explore.Show()
                 UpdateExploreHud()
                 Explore.Notify("El Silencio se extiende por Puerto Calma... Pulsa {MenuKeyHint} para ver el grupo.")
+            RefreshWorld()
+            if (IntroLines.Length > 0, not HasFlag[1]):
+                set InMenu = true
+                Dialogue(Player, IntroLines)
+                AddFlag(1)
+                SaveGame(Player)
+                set InMenu = false
             spawn{ MenuLoop(Player) }
             if (AutoStartDelay > 0.0):
                 Sleep(AutoStartDelay)
@@ -136,7 +151,9 @@ battle_manager := class(creative_device):
         var Data:save_data = save_data{}
         if (not ResetSaveOnStart?, Saved := SaveTable[Player]):
             set Data = Saved
-        set Party = for (Index -> Kind : PartyOrder(), Index < StartingPartySize):
+        set Flags = Data.Flags
+        Size := Max(StartingPartySize, Data.PartySize)
+        set Party = for (Index -> Kind : PartyOrder(), Index < Size):
             SavedLevel := if (L := Data.Levels[Index]) then L else 1
             SavedXP := if (X := Data.XPs[Index]) then X else 0
             SavedTier := if (T := Data.Tiers[Index]) then T else 0
@@ -174,7 +191,9 @@ battle_manager := class(creative_device):
             set NewHasRespawn = true
             set Point = Saved
         CurrentItems := Items
-        NewData := save_data{Levels := NewLevels, XPs := NewXPs, Items := CurrentItems, Tiers := NewTiers, Equipped := NewEquipped, Owned := NewOwned, OpenedChests := NewOpened, HasRespawn := NewHasRespawn, RespawnX := Point.X, RespawnY := Point.Y, RespawnZ := Point.Z}
+        CurrentFlags := Flags
+        CurrentSize := Party.Length
+        NewData := save_data{Levels := NewLevels, XPs := NewXPs, Items := CurrentItems, Tiers := NewTiers, Equipped := NewEquipped, Owned := NewOwned, OpenedChests := NewOpened, PartySize := CurrentSize, Flags := CurrentFlags, HasRespawn := NewHasRespawn, RespawnX := Point.X, RespawnY := Point.Y, RespawnZ := Point.Z}
         if (Player.IsActive[], set SaveTable[Player] = NewData) {}
 
     # --- Exploración ---
@@ -187,15 +206,20 @@ battle_manager := class(creative_device):
                 Position := Character.GetTransform().Translation
                 CheckChests(Player, Position)
                 CheckRestSpots(Player, Position)
+                MaybeStory := FindStoryEvent(Position)
+                if (Story := MaybeStory?):
+                    PlayStoryEvent(Player, Story)
                 MaybeEncounter := FindEncounter(Position)
                 if (Encounter := MaybeEncounter?):
+                    if (Encounter.IntroLines.Length > 0):
+                        Dialogue(Player, Encounter.IntroLines)
                     Outcome := StartBattle(Player, Encounter.Enemies, true)
                     AfterEncounter(Player, Encounter, Outcome)
 
     # Devuelve el encuentro activo dentro del radio (o nada). Rearma los lejanos.
     FindEncounter(Position:vector3):?encounter_spot =
         var Found:?encounter_spot = false
-        for (Encounter : Encounters, not Encounter.Defeated?):
+        for (Encounter : Encounters, not Encounter.Defeated?, HasFlag[Encounter.RequiredFlag]):
             Dist := Distance(Position, Encounter.Marker.GetTransform().Translation)
             if (Dist > TriggerRadius * 1.6):
                 set Encounter.Armed = true
@@ -207,6 +231,9 @@ battle_manager := class(creative_device):
         if (Outcome = battle_outcome.Victory):
             set Encounter.Defeated = true
             Encounter.Marker.Hide()
+            if (Encounter.SetFlagOnWin > 0):
+                AddFlag(Encounter.SetFlagOnWin)
+                RefreshWorld()
         else if (Outcome = battle_outcome.Fled):
             # Hay que alejarse para que el encuentro vuelva a activarse.
             set Encounter.Armed = false
@@ -230,9 +257,9 @@ battle_manager := class(creative_device):
                 HealParty()
                 # Reaparecemos un poco delante del faro.
                 set MaybeRespawn = option{Rest.Marker.GetTransform().Translation + vector3{X := 250.0, Y := 0.0, Z := 50.0}}
-                for (Encounter : Encounters):
+                for (Encounter : Encounters, not Encounter.IsBoss?):
                     set Encounter.Defeated = false
-                    Encounter.Marker.Show()
+                RefreshWorld()
                 SaveGame(Player)
                 Notify("Descansas junto al faro. Grupo recuperado. Partida guardada. Los Mudos regresan...")
                 UpdateExploreHud()
@@ -342,6 +369,89 @@ battle_manager := class(creative_device):
         Screen.SetPartyLines(Lines)
         Screen.SetEnemyLines(array{})
         Screen.SetHarmony("Tónicos {Items}   Partituras: {OwnedPartituras.Length}/{AllPartituras().Length}")
+
+    # --- Historia ---
+
+    HasFlag(Flag:int)<transacts><decides>:void =
+        Found := for (F : Flags, F = Flag) { F }
+        Flag = 0 or Found.Length > 0
+
+    AddFlag(Flag:int):void =
+        if (Flag > 0, not HasFlag[Flag]):
+            set Flags = Flags + array{Flag}
+
+    # Muestra u oculta los marcadores según la historia y el progreso.
+    RefreshWorld():void =
+        for (Encounter : Encounters):
+            if (Encounter.IsBoss?, HasFlag[Encounter.SetFlagOnWin], Encounter.SetFlagOnWin > 0):
+                set Encounter.Defeated = true
+            if (not Encounter.Defeated?, HasFlag[Encounter.RequiredFlag]):
+                Encounter.Marker.Show()
+            else:
+                Encounter.Marker.Hide()
+        for (Story : StoryEvents):
+            if (StoryAvailable[Story]):
+                Story.Marker.Show()
+            else:
+                Story.Marker.Hide()
+
+    # Un evento está disponible si se cumple su requisito y aún no se ha visto.
+    StoryAvailable(Story:story_event)<transacts><decides>:void =
+        HasFlag[Story.RequiredFlag]
+        not (Story.SetFlag > 0 and HasFlag[Story.SetFlag])
+
+    FindStoryEvent(Position:vector3):?story_event =
+        var Found:?story_event = false
+        for (Story : StoryEvents, not Found?, StoryAvailable[Story]):
+            if (Distance(Position, Story.Marker.GetTransform().Translation) <= TriggerRadius):
+                set Found = option{Story}
+        Found
+
+    PlayStoryEvent(Player:player, Story:story_event)<suspends>:void =
+        set InMenu = true
+        Dialogue(Player, Story.Lines)
+        if (Story.Joins = party_join.Joel):
+            JoinParty(hero_kind.Joel)
+        else if (Story.Joins = party_join.Kesh):
+            JoinParty(hero_kind.Kesh)
+        AddFlag(Story.SetFlag)
+        RefreshWorld()
+        SaveGame(Player)
+        UpdateExploreHud()
+        set InMenu = false
+
+    # Añade un héroe al grupo al nivel de Oria (si aún no está).
+    JoinParty(Kind:hero_kind):void =
+        Already := for (Hero : Party, Hero.Kind = Kind) { Hero }
+        if (Already.Length = 0):
+            LeaderLevel := if (Leader := Party[0]) then Leader.Level else 1
+            NewHero := MakeHero(Kind, LeaderLevel, 0, partitura.Ninguna)
+            NewHero.ResetForBattle()
+            set Party = Party + array{NewHero}
+            Notify("¡{NewHero.Name} se une al grupo!")
+
+    # Muestra un diálogo línea a línea. Formato de cada línea: "Nombre: texto".
+    Dialogue(Player:player, Lines:[]string)<suspends>:void =
+        if (UI := GetPlayerUI[Player]):
+            if (Explore := MaybeExplore?):
+                Explore.Hide()
+            Screen := battle_ui{PlayerUI := UI}
+            Screen.Init()
+            Screen.Show()
+            Screen.SetPartyLines(array{})
+            Screen.SetEnemyLines(array{})
+            Screen.SetHarmony("")
+            var LineIndex:int = 0
+            loop:
+                if (LineIndex >= Lines.Length):
+                    break
+                if (Line := Lines[LineIndex]):
+                    Screen.SetMessage(Line)
+                    Screen.Ask(array{"Continuar"}, array{}, false)
+                set LineIndex = LineIndex + 1
+            Screen.Hide()
+            if (Explore := MaybeExplore?):
+                Explore.Show()
 
     HealParty():void =
         for (Hero : Party):
@@ -685,7 +795,7 @@ battle_manager := class(creative_device):
             else:
                 false
 
-    # Turno de un enemigo: Quemadura, Aturdimiento o ataque (con combo) contra un héroe al azar.
+    # Turno de un enemigo: Quemadura, Aturdimiento o ataque (con combo) contra un héroe al azar o contra todos.
     EnemyTurn(Slot:enemy_slot, Enemies:[]enemy_slot, Screen:battle_ui)<suspends>:void =
         Enemy := Slot.Fighter
         Burn := Enemy.StartTurn()
@@ -702,28 +812,43 @@ battle_manager := class(creative_device):
             Sleep(1.2)
             return
 
+        # Jefes: segunda fase al bajar de la mitad de vida.
+        if (Enemy.HasPhase2?, not Enemy.InPhase2?, Enemy.HP * 2 <= Enemy.MaxHP):
+            set Enemy.InPhase2 = true
+            Screen.SetMessage(Enemy.Phase2Message)
+            Sleep(2.0)
+        Pattern := if (Enemy.InPhase2?) then Enemy.Phase2Pattern else Enemy.Pattern
+
         Alive := AliveHeroes()
-        if (Target := Alive[GetRandomInt(0, Alive.Length - 1)]):
-            Pattern := Enemy.Pattern
+        var Targets:[]combatant = array{}
+        var TargetText:string = ""
+        if (Pattern.HitsAllHeroes?):
+            set Targets = Alive
+            set TargetText = "todo el grupo"
+        else if (Target := Alive[GetRandomInt(0, Alive.Length - 1)]):
+            set Targets = array{Target}
+            set TargetText = Target.Name
+        if (Targets.Length > 0):
             Hits := Pattern.FollowUpGaps.Length + 1
             if (Hits > 1):
-                Screen.SetMessage("¡{Enemy.Name} prepara {Pattern.Name} contra {Target.Name}! ({Hits} golpes)")
+                Screen.SetMessage("¡{Enemy.Name} prepara {Pattern.Name} contra {TargetText}! ({Hits} golpes)")
             else:
-                Screen.SetMessage("¡{Enemy.Name} prepara {Pattern.Name} contra {Target.Name}!")
-            ResolveHit(Slot, Target, Screen, GetRandomFloat(Pattern.MinWindup, Pattern.MaxWindup))
+                Screen.SetMessage("¡{Enemy.Name} prepara {Pattern.Name} contra {TargetText}!")
+            ResolveHit(Slot, Targets, Pattern, Screen, GetRandomFloat(Pattern.MinWindup, Pattern.MaxWindup))
             Refresh(Screen, Enemies, "")
             var HitIndex:int = 0
             loop:
                 if (HitIndex >= Pattern.FollowUpGaps.Length):
                     break
-                if (Gap := Pattern.FollowUpGaps[HitIndex], not Target.IsDefeated[], not Enemy.IsDefeated[]):
-                    ResolveHit(Slot, Target, Screen, Gap)
+                StillAlive := for (T : Targets, not T.IsDefeated[]) { T }
+                if (Gap := Pattern.FollowUpGaps[HitIndex], StillAlive.Length > 0, not Enemy.IsDefeated[]):
+                    ResolveHit(Slot, StillAlive, Pattern, Screen, Gap)
                     Refresh(Screen, Enemies, "")
                 set HitIndex = HitIndex + 1
             Sleep(1.2)
 
-    # Un golpe enemigo con su ventana de reacción.
-    ResolveHit(Slot:enemy_slot, Target:combatant, Screen:battle_ui, Windup:float)<suspends>:void =
+    # Un golpe enemigo con su ventana de reacción. Una sola reacción protege a todos los objetivos.
+    ResolveHit(Slot:enemy_slot, Targets:[]combatant, Pattern:attack_pattern, Screen:battle_ui, Windup:float)<suspends>:void =
         Enemy := Slot.Fighter
         ImpactTime := GetSimulationElapsedTime() + Windup
         spawn{ AnimateAttack(Slot, Windup) }
@@ -734,28 +859,36 @@ battle_manager := class(creative_device):
         if (Remaining > 0.0):
             Sleep(Remaining)
 
+        Names := if (Targets.Length > 1) then "el grupo" else if (First := Targets[0]) then First.Name else ""
         if (Result = dodge_result.Parry):
-            set Target.AP = Min(Target.AP + 1, MaxAP)
-            if (Target.UsesRhythm?):
-                set Target.Rhythm = Min(Target.Rhythm + 2, MaxRhythm)
-            Counter := CalculateDamage(Target, Enemy, CounterMultiplier)
+            var Counter:int = 0
+            for (Target : Targets):
+                set Target.AP = Min(Target.AP + 1, MaxAP)
+                if (Target.UsesRhythm?):
+                    set Target.Rhythm = Min(Target.Rhythm + 2, MaxRhythm)
+                Damage := CalculateDamage(Target, Enemy, CounterMultiplier)
+                set Counter = Counter + Damage
             Enemy.TakeDamage(Counter)
             CheckDefeated(Slot)
-            Screen.SetMessage("¡CONTRATIEMPO! {Target.Name} bloquea y contraataca: {Counter} de daño.")
+            Screen.SetMessage("¡CONTRATIEMPO! {Names} bloquea y contraataca: {Counter} de daño.")
         else if (Result = dodge_result.Dodge):
-            if (Target.UsesRhythm?):
+            for (Target : Targets, Target.UsesRhythm?):
                 set Target.Rhythm = Min(Target.Rhythm + 1, MaxRhythm)
-            Screen.SetMessage("¡{Target.Name} esquiva el golpe!")
+            Screen.SetMessage("¡{Names} esquiva el golpe!")
         else:
-            Damage := CalculateDamage(Enemy, Target, Enemy.Pattern.HitMultiplier)
-            Target.TakeDamage(Damage)
-            set Target.Rhythm = 0
-            if (Enemy.Pattern.WeakTurns > 0):
-                set Target.WeakTurns = Max(Target.WeakTurns, Enemy.Pattern.WeakTurns)
-            if (Result = dodge_result.Early):
-                Screen.SetMessage("¡Demasiado pronto! {Enemy.Name} golpea a {Target.Name}: {Damage} de daño.")
+            var Total:int = 0
+            for (Target : Targets):
+                Damage := CalculateDamage(Enemy, Target, Pattern.HitMultiplier)
+                Target.TakeDamage(Damage)
+                set Target.Rhythm = 0
+                if (Pattern.WeakTurns > 0):
+                    set Target.WeakTurns = Max(Target.WeakTurns, Pattern.WeakTurns)
+                set Total = Total + Damage
+            Prefix := if (Result = dodge_result.Early) then "¡Demasiado pronto! " else ""
+            if (Targets.Length > 1):
+                Screen.SetMessage("{Prefix}{Enemy.Name} golpea a todo el grupo: {Total} de daño en total.")
             else:
-                Screen.SetMessage("{Enemy.Name} golpea a {Target.Name}: {Damage} de daño.")
+                Screen.SetMessage("{Prefix}{Enemy.Name} golpea a {Names}: {Total} de daño.")
 
     # Espera la primera pulsación. Solo cuenta la primera: pulsar antes de tiempo es fallo.
     WaitForReaction(ImpactTime:float)<suspends>:dodge_result =

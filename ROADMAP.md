@@ -127,9 +127,9 @@ Cada issue debe caber en **una sesión de Claude Code**: un sistema o archivo co
 
 **Objetivo:** un primer acto completo y publicable (unos 45–60 minutos de juego).
 
-- [ ] `diseño` Historia del Acto 1, diálogos y personajes secundarios.
-- [ ] `verse` Sistema de diálogos y misiones sencillas.
-- [ ] `verse` **2 jefes** con fases y mecánicas propias.
+- [x] `diseño` Historia del Acto 1, diálogos y personajes secundarios (ver `docs/HISTORIA_ACTO1.md`).
+- [x] `verse` Sistema de diálogos y misiones sencillas (eventos de historia con marcas/flags, incorporación de Joel y Kesh).
+- [x] `verse` **2 jefes** con fases y mecánicas propias (Metrónomo Roto y Soprano Hueca). *Pendiente de prueba en sesión.*
 - [ ] `editor` 3 zonas conectadas con estilo visual propio.
 - [ ] `editor` ~8 tipos de enemigo repartidos por las zonas.
 - [ ] `arte` Música y ambientación (original o con licencia).

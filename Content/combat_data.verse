@@ -192,17 +192,52 @@ MakeSordina():combatant =
         XPReward := 20
         Pattern := attack_pattern{Name := "Apagón", MinWindup := 0.9, MaxWindup := 1.5, WeakTurns := 2}
 
+# --- Jefes del Acto 1 ---
+# El Metrónomo Roto: máquina gigante. En la segunda fase acelera el tempo (avisos más cortos y combos).
+MakeMetronomo():combatant =
+    combatant:
+        Name := "Metrónomo Roto"
+        MaxHP := 600
+        Attack := 26
+        Defense := 6
+        Speed := 8
+        XPReward := 150
+        Pattern := attack_pattern{Name := "Péndulo", MinWindup := 1.4, MaxWindup := 2.2, FollowUpGaps := array{1.0}}
+        HasPhase2 := true
+        Phase2Pattern := attack_pattern{Name := "Allegro", MinWindup := 0.8, MaxWindup := 1.2, FollowUpGaps := array{0.6, 0.6, 0.45}, HitMultiplier := 0.75}
+        Phase2Message := "¡El Metrónomo Roto acelera el tempo!"
+
+# La Soprano Hueca: sus gritos alcanzan a todo el grupo. En la segunda fase grita en oleadas.
+MakeSoprano():combatant =
+    combatant:
+        Name := "Soprano Hueca"
+        MaxHP := 750
+        Attack := 24
+        Defense := 5
+        Speed := 11
+        XPReward := 220
+        Pattern := attack_pattern{Name := "Aria", MinWindup := 1.2, MaxWindup := 1.8, HitsAllHeroes := true, HitMultiplier := 0.8}
+        HasPhase2 := true
+        Phase2Pattern := attack_pattern{Name := "Coloratura", MinWindup := 1.0, MaxWindup := 1.5, FollowUpGaps := array{0.8, 0.55, 0.55}, HitsAllHeroes := true, HitMultiplier := 0.6, WeakTurns := 1}
+        Phase2Message := "¡La Soprano Hueca alcanza notas imposibles!"
+
 # Tipos de enemigo que se pueden elegir en el editor para cada encuentro.
 enemy_kind := enum:
     Badajo
     CoroHueco
     Sordina
+    MetronomoRoto
+    SopranoHueca
 
 MakeEnemy(EnemyKind:enemy_kind):combatant =
     if (EnemyKind = enemy_kind.CoroHueco):
         MakeCoroHueco()
     else if (EnemyKind = enemy_kind.Sordina):
         MakeSordina()
+    else if (EnemyKind = enemy_kind.MetronomoRoto):
+        MakeMetronomo()
+    else if (EnemyKind = enemy_kind.SopranoHueca):
+        MakeSoprano()
     else:
         MakeBadajo()
 
