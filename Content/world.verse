@@ -17,8 +17,12 @@ rest_spot := class<concrete>:
     @editable Marker:creative_prop = creative_prop{}
     var Armed:logic = true
 
-# Un cofre: da tónicos la primera vez que te acercas.
+# Un cofre: da tónicos, una partitura y/o Resina la primera vez que te acercas.
 chest_spot := class<concrete>:
     @editable Marker:creative_prop = creative_prop{}
     @editable Tonics:int = 1
+    # Partitura que contiene (Ninguna = no contiene).
+    @editable Partitura:partitura = partitura.Ninguna
+    # Resina de la Campana: mejora un nivel el instrumento de todo el grupo.
+    @editable UpgradesInstruments:logic = false
     var Opened:logic = false

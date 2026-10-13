@@ -22,6 +22,9 @@
 - Los `data members` no pueden inicializarse con funciones `<localizes>` (error 3582): asigna textos en un método (`SetText`).
 - Las funciones `<decides>` se llaman con corchetes: `logic{MiFuncion[X]}`, nunca con paréntesis.
 - No llames funciones `<suspends>` dentro de la condición de un `if`: guarda el resultado antes (`R := F()` y luego `if (X := R?)`). Para bucles con llamadas `<suspends>`, usa `loop` con índice en vez de `for`.
+- No uses el mismo nombre para un campo de la clase y una variable o parámetro de un método (p. ej. `Hero`, `Items`, `Kind`): Verse da error de identificador ambiguo.
+- Las funciones de módulo usadas dentro de `for`/`if` deben marcarse `<computes>` (si no, error de efecto `no_rollback`).
+- Guardado: `var SaveTable:weak_map(player, save_data)` de ámbito de módulo con una clase `<persistable>` sin campos `var`.
 - Los errores completos del compilador están en `%LOCALAPPDATA%\UnrealEditorFortnite\Saved\Logs\UnrealEditorFortnite.log` (buscar `Script error`).
 
 ## Convenciones de Verse

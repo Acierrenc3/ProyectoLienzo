@@ -45,3 +45,24 @@ Marcadores: duplicados de *Graybox Wall Small* enlazados en los arrays del `batt
 | `Chests[0]` | C9 (bajo: 0,8 / 0,4 / 0,8) | (1400, 0, 1500) | 1 tónico |
 
 `TriggerRadius` = 250 cm · `TonicDropChance` = 0,35 · `AutoStartDelay` = -1 (desactivado).
+
+## Grupo en la arena (Fase 4)
+
+| Campo | Marcador | Posición (Izq, Arriba, Adelante) | Escala |
+|---|---|---|---|
+| `HeroProps[0]` | C10 (Joel) | (-1050, 0, -380) | 0,5 / 1,3 / 0,5 |
+| `HeroProps[1]` | C11 (Kesh) | (-550, 0, -380) | 0,5 / 1,3 / 0,5 |
+
+`StartingPartySize` = 3. `ResetSaveOnStart` = **true solo para pruebas** (borra el guardado al empezar; ponerlo a false antes de publicar).
+
+## Equipo y menú (Fase 4, parte 2)
+
+| Campo | Elemento | Ajustes |
+|---|---|---|
+| `MenuInput` | Gatillo de entrada2 | Entrada: **Personalizado 6 (Interactuar)** = tecla E · Descripción HUD "Menú del grupo" |
+| `MenuKeyHint` | — | "E (Interactuar)" |
+| `Chests[0]` | C9 (1400, 0, 1500) | 1 tónico + Partitura Serena |
+| `Chests[1]` | C12 (-200, 0, 1300) | Partitura del Eco + Resina (UpgradesInstruments) |
+| `Chests[2]` | C13 (1700, 0, 800) | 1 tónico + Partitura Ardiente |
+
+Las partituras Presto y Firme quedan para el contenido del Acto 1.

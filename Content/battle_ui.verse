@@ -8,22 +8,27 @@ using { /Verse.org/Simulation }
 # Convierte un texto en `message` para los widgets.
 ToMessage<localizes>(Text:string):message = "{Text}"
 
-# Interfaz reutilizable: un menú de hasta 4 opciones + "Volver".
-# Ask() devuelve el índice de la opción elegida (0-3) o -1 si se pulsa "Volver".
+# Interfaz reutilizable: un menú de hasta 6 opciones + "Volver".
+# Ask() devuelve el índice de la opción elegida (0-5) o -1 si se pulsa "Volver".
 battle_ui := class:
     PlayerUI:player_ui
 
-    HeroText:text_block = text_block{DefaultTextColor := NamedColors.White, DefaultTextSize := 28.0}
+    PartyText0:text_block = text_block{DefaultTextColor := NamedColors.White, DefaultTextSize := 24.0}
+    PartyText1:text_block = text_block{DefaultTextColor := NamedColors.White, DefaultTextSize := 24.0}
+    PartyText2:text_block = text_block{DefaultTextColor := NamedColors.White, DefaultTextSize := 24.0}
     EnemyText0:text_block = text_block{DefaultTextColor := NamedColors.Tomato, DefaultTextSize := 26.0}
     EnemyText1:text_block = text_block{DefaultTextColor := NamedColors.Tomato, DefaultTextSize := 26.0}
     EnemyText2:text_block = text_block{DefaultTextColor := NamedColors.Tomato, DefaultTextSize := 26.0}
     MessageText:text_block = text_block{DefaultTextColor := NamedColors.Gold, DefaultTextSize := 32.0}
+    HarmonyText:text_block = text_block{DefaultTextColor := NamedColors.SkyBlue, DefaultTextSize := 22.0}
 
     # Los textos de los botones se asignan en ShowMenu().
     Button0:button_regular = button_regular{}
     Button1:button_regular = button_regular{}
     Button2:button_regular = button_regular{}
     Button3:button_regular = button_regular{}
+    Button4:button_regular = button_regular{}
+    Button5:button_regular = button_regular{}
     BackButton:button_quiet = button_quiet{}
 
     # Se emite con el índice del botón pulsado (-1 = Volver).
@@ -40,6 +45,8 @@ battle_ui := class:
         Button1.OnClick().Subscribe(OnButton1)
         Button2.OnClick().Subscribe(OnButton2)
         Button3.OnClick().Subscribe(OnButton3)
+        Button4.OnClick().Subscribe(OnButton4)
+        Button5.OnClick().Subscribe(OnButton5)
         BackButton.OnClick().Subscribe(OnBack)
 
         Hud := canvas:
@@ -48,7 +55,10 @@ battle_ui := class:
                 MakeSlot(EnemyText0, 0.50, 0.12)
                 MakeSlot(EnemyText1, 0.50, 0.16)
                 MakeSlot(EnemyText2, 0.50, 0.20)
-                MakeSlot(HeroText, 0.24, 0.82)
+                MakeSlot(HarmonyText, 0.24, 0.64)
+                MakeSlot(PartyText0, 0.24, 0.68)
+                MakeSlot(PartyText1, 0.24, 0.72)
+                MakeSlot(PartyText2, 0.24, 0.76)
         set MaybeHud = option{Hud}
 
         MenuBox := stack_box:
@@ -58,10 +68,12 @@ battle_ui := class:
                 MakeMenuSlot(Button1)
                 MakeMenuSlot(Button2)
                 MakeMenuSlot(Button3)
+                MakeMenuSlot(Button4)
+                MakeMenuSlot(Button5)
                 MakeMenuSlot(BackButton)
         Menu := canvas:
             Slots := array:
-                MakeSlot(MenuBox, 0.84, 0.68)
+                MakeSlot(MenuBox, 0.84, 0.62)
         set MaybeMenu = option{Menu}
 
     # Muestra el estado del combate (sin menú).
@@ -77,7 +89,7 @@ battle_ui := class:
 
     # Muestra el menú con las etiquetas dadas. Enabled[i] = false desactiva la opción i.
     ShowMenu(Labels:[]string, Enabled:[]logic, AllowBack:logic):void =
-        Buttons:[]button_regular = array{Button0, Button1, Button2, Button3}
+        Buttons:[]button_regular = array{Button0, Button1, Button2, Button3, Button4, Button5}
         for (Index -> Button : Buttons):
             if (Label := Labels[Index]):
                 Button.SetText(ToMessage(Label))
@@ -110,9 +122,17 @@ battle_ui := class:
     SetMessage(Text:string):void =
         MessageText.SetText(ToMessage(Text))
 
-    # Actualiza la línea del héroe.
-    SetHeroLine(Text:string):void =
-        HeroText.SetText(ToMessage(Text))
+    SetHarmony(Text:string):void =
+        HarmonyText.SetText(ToMessage(Text))
+
+    # Actualiza las líneas del grupo (hasta 3). Las que sobran quedan vacías.
+    SetPartyLines(Lines:[]string):void =
+        Texts:[]text_block = array{PartyText0, PartyText1, PartyText2}
+        for (Index -> Text : Texts):
+            if (Line := Lines[Index]):
+                Text.SetText(ToMessage(Line))
+            else:
+                Text.SetText(ToMessage(""))
 
     # Actualiza las líneas de los enemigos (hasta 3). Las que sobran quedan vacías.
     SetEnemyLines(Lines:[]string):void =
@@ -127,6 +147,8 @@ battle_ui := class:
     OnButton1(Message:widget_message):void = Choice.Signal(1)
     OnButton2(Message:widget_message):void = Choice.Signal(2)
     OnButton3(Message:widget_message):void = Choice.Signal(3)
+    OnButton4(Message:widget_message):void = Choice.Signal(4)
+    OnButton5(Message:widget_message):void = Choice.Signal(5)
     OnBack(Message:widget_message):void = Choice.Signal(-1)
 
 # Ranura de canvas centrada en una posición relativa de la pantalla (0.0 a 1.0).

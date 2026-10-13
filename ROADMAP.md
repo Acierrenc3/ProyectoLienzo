@@ -109,13 +109,13 @@ Cada issue debe caber en **una sesión de Claude Code**: un sistema o archivo co
 
 **Objetivo:** el jugador controla un grupo de 3 héroes y lo mejora con el tiempo.
 
-- [ ] `verse` Grupo de **3 héroes** controlados por el jugador; el orden de turnos depende de la velocidad.
-- [ ] `verse` Habilidades únicas por héroe (estilos distintos, por ejemplo: daño, apoyo y control).
-- [ ] `verse` Experiencia, niveles y subida de estadísticas.
-- [ ] `verse` Equipo: armas y un sistema original de **mejoras equipables** con efectos pasivos.
-- [ ] `verse` **Guardado persistente** entre sesiones (datos `persistable` de Verse).
-- [ ] `verse` Menú fuera de combate: grupo, equipo y habilidades.
-- [ ] `diseño` Curva de progresión y tabla de equipo.
+- [x] `verse` Grupo de **3 héroes** controlados por el jugador; orden de turnos por velocidad; PA por héroe; los enemigos atacan a un héroe al azar.
+- [x] `verse` Habilidades únicas: Oria (daño + Ritmo), Joel (curar, dar PA, Armonía), Kesh (debilitar, aturdir, Réquiem; cuestan vida).
+- [x] `verse` Experiencia, niveles (máx. 20) y subida de estadísticas.
+- [x] `verse` Equipo: **instrumentos** (+3 ataque por mejora, máx. +3, con Resina de la Campana) y 5 **partituras** equipables con efectos pasivos.
+- [x] `verse` **Guardado persistente** (`save_data.verse`): niveles, experiencia, tónicos y último faro. Se guarda en faros, cofres y tras cada combate.
+- [x] `verse` Menú del grupo fuera de combate (tecla E): estadísticas, experiencia, equipo y cambio de partitura.
+- [x] `diseño` Curva de progresión y tabla de equipo (ver `docs/DISENO.md`).
 
 **Nota:** los héroes en combate serán NPCs o modelos propios; el jugador sigue apareciendo con su skin de Fortnite al explorar.
 

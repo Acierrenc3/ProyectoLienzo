@@ -42,6 +42,44 @@ La última persona capaz de oír la melodía. Explora con su propia skin de Fort
 | Golpe Sordo | 2 PA | 1,2× daño + Aturdimiento 1 turno |
 | Tambor Ígneo | 4 PA | 0,9× daño a todos + Quemadura 3 turnos |
 
+## Grupo (Fase 4)
+| Héroe | PV (nv. 1) | Ataque | Defensa | Velocidad | Por nivel |
+|---|---|---|---|---|---|
+| Oria | 120 | 18 | 6 | 10 | +12 PV, +2 Ataque, +1 Defensa |
+| Joel | 95 | 12 | 5 | 12 | +9 PV, +1 Ataque, +1 Defensa |
+| Kesh | 85 | 20 | 3 | 14 | +8 PV, +2 Ataque, +1 Defensa |
+
+- Experiencia para subir: 40 + 30 × nivel actual. Nivel máximo 20.
+- Experiencia por enemigo: Badajo 30, Coro Hueco 25, Sordina 20 (la reciben todos los héroes).
+- Cada héroe tiene sus propios PA (máx. 9). Los enemigos atacan a un héroe al azar; la esquiva protege a ese héroe.
+- Si un héroe cae, vuelve con 1 PV en el siguiente combate; si caen los tres, derrota (reaparición en el último faro).
+
+### Habilidades de Joel
+| Habilidad | Coste | Efecto |
+|---|---|---|
+| Afinar | 2 PA | Cura 35 PV a un aliado |
+| Diapasón | 1 PA | Da 2 PA a un aliado |
+| Armonía | 3 PA | El grupo hace +25 % de daño durante 2 rondas |
+
+### Habilidades de Kesh (cuestan vida propia; nunca la dejan a 0)
+| Habilidad | Coste | Efecto |
+|---|---|---|
+| Campanillas | 2 PA | 1,3× daño + Debilidad 2 turnos |
+| Eco del Silencio | 2 PA + 10 % PV | 0,5× daño + Aturdimiento 1 turno |
+| Réquiem | 5 PA + 20 % PV | 1,8× daño a todos |
+
+## Equipo (Fase 4)
+**Instrumentos** (arma de cada héroe): Martillo-tambor (Oria), Diapasón (Joel), Campanillas rotas (Kesh). Cada mejora (+1 a +3) da +3 de ataque. Se mejoran con la **Resina de la Campana** (cofres; mejora a todo el grupo).
+
+**Partituras** (una por héroe, se encuentran en cofres y se equipan en el menú del grupo, tecla E):
+| Partitura | Efecto |
+|---|---|
+| del Eco | Empieza cada combate con 2 PA |
+| Serena | +15 % de vida máxima |
+| Presto | +4 de velocidad |
+| Firme | +4 de defensa |
+| Ardiente | Los ataques normales queman 2 turnos |
+
 ## Estados alterados
 - **Quemadura:** pierde un 6 % de la vida máxima al empezar su turno.
 - **Aturdimiento:** pierde el turno.

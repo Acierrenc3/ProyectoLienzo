@@ -23,8 +23,24 @@ combatant := class:
     Defense:int
     Speed:int
     Pattern:attack_pattern = attack_pattern{}
+    # --- Héroes ---
+    Kind:hero_kind = hero_kind.Oria
+    Level:int = 1
+    Skills:[]skill = array{}
+    # Ritmo solo lo usa Oria.
+    UsesRhythm:logic = false
+    # Equipo (Fase 4): nivel de mejora del instrumento y partitura equipada.
+    Tier:int = 0
+    Equipped:partitura = partitura.Ninguna
+    # Efectos de la partitura.
+    StartAP:int = 0
+    BurnOnAttack:logic = false
+    # --- Enemigos ---
+    XPReward:int = 0
 
     var HP:int = 0
+    var AP:int = 0
+    var XP:int = 0
     # Estados alterados (turnos restantes).
     var BurnTurns:int = 0     # Quemadura: pierde un 6 % de la vida máxima al empezar su turno
     var StunTurns:int = 0     # Aturdimiento: pierde su turno
@@ -35,6 +51,7 @@ combatant := class:
     # Deja el combatiente listo para un combate nuevo.
     ResetForBattle():void =
         set HP = MaxHP
+        set AP = StartAP
         set BurnTurns = 0
         set StunTurns = 0
         set WeakTurns = 0
@@ -42,6 +59,7 @@ combatant := class:
 
     # Quita estados y Ritmo pero conserva la vida (la vida del héroe persiste entre combates).
     ClearStatus():void =
+        set AP = StartAP
         set BurnTurns = 0
         set StunTurns = 0
         set WeakTurns = 0
