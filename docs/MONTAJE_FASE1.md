@@ -96,17 +96,47 @@ Nota: un guardado antiguo con `PartySize` 3 no se reduce al cambiar `StartingPar
 | `Encounters[8]` | C21 | (400, 0, 2500) | Eco Errante + Diapasón | 4 |
 | `Encounters[9]` | C22 | (1400, 0, 2400) | Gárgola Coral + Eco Errante | 4 |
 
-### Ambientación de las zonas (prefabricados de Fortnite)
+## Mapa reorganizado (Fase 5, segunda pasada)
 
-Cada prefabricado tiene un actor raíz ("Raíz de set de juego"); moviendo la raíz se mueve todo el conjunto.
+Las posiciones de las tablas anteriores quedan **sustituidas** por estas. Los marcadores se separaron 3 veces más para que quepan los edificios, y la arena de combate se apartó 80 m del pueblo.
 
-| Zona | Prefabricado (carpeta Prefabricados) | Raíz en (Izq, Arriba, Adelante) |
+### Arena de combate (apartada, sobre suelo de tierra)
+
+| Elemento | Posición (Izq, Arriba, Adelante) |
+|---|---|
+| Teletransportador (`ArenaSpot`) | (-800, 0, -8300) |
+| Cámara de punto fijo | (-800, 380, -8950), rotación (15, 0, 0) |
+| C (Badajo) / C2 / C3 | (-800, 0, -7650) / (-1150, 0, -7750) / (-450, 0, -7750) |
+| C10 (Joel) / C11 (Kesh) | (-1050, 0, -8380) / (-550, 0, -8380) |
+| Teletransportador2 (`ReturnSpot`) | (0, 0, -1200) |
+
+### Marcadores del mundo
+
+| Marcador | Uso | Posición (Izq, Adelante) |
 |---|---|---|
-| Puerto Calma | Faro › Lockie's Lighthouse | (1536, 0, -512) |
-| Fundición | Fábrica › Slant (taller de ladrillo) | (-2560, 0, 1024) |
-| Torre | Fortaleza Feudal › Castillo de Fortaleza Feudal | (700, 0, 3600) |
+| C4, C5, C6, C7 | Encuentros 0–3 (Puerto Calma) | (1800, 1800), (3000, 3600), (1200, 5100), (3900, 1200) |
+| C8 | Faro de descanso | (900, -900) |
+| C9, C12, C13 | Cofres | (4200, 4500), (-600, 3900), (5100, 2400) |
+| C14, C15 | Joel / Metrónomo Roto | (-2100, 900), (-2700, 3600) |
+| C16, C17, C18 | Kesh / Soprano Hueca / final | (0, 5700), (2400, 6000), (-1500, 5100) |
+| C19, C20 | Encuentros Fundición | (-3900, 2100), (-4200, 4800) |
+| C21, C22 | Encuentros Torre | (1200, 7500), (4200, 7200) |
 
-Descartados: la fábrica grande (703 piezas, tapaba los encuentros) y la plaza de la Fortaleza (demasiado pesada).
+### Ambientación (prefabricados y galerías de Fortnite)
+
+Cada prefabricado tiene un actor raíz ("Raíz de set de juego"); moviendo la raíz se mueve todo. Al borrar la raíz se borra el conjunto.
+
+| Elemento | Origen | Raíz en (Izq, Adelante) |
+|---|---|---|
+| Suelo: 9 baldosas *Grass Temp Solid1* (escala 10/1/10) | Galerías › Terreno › Forest & Grass Floor | X ∈ {-4500, 1000, 6500} × Z ∈ {-1000, 4500, 10000} (salvo Fundición) + (7500, -4000) |
+| Suelo Fundición y arena: *Dirt Temp Solid* (escala 10/1/10) | Galerías › Terreno › Dirt & Mud Floor | (-4500, 4500) y (1100, -8460) |
+| Caminos: *Dirt Temp Solid* (Arriba 3) | igual | N-S (1000, 2800) escala 0,8/1/20 · E-O (6000, 2400) escala 24/1/0,8 |
+| 15 robles *Hera Oak Tree Medium Grasslands CS* | Galerías › Naturaleza › Bahía Buenaventura | repartidos por las 3 zonas y detrás de la arena |
+| Plaza-parque *Gazebo*, *Blue House*, *Brick House* | Prefabricados › Parque Placentero | (7400, -1800), (7000, 500), (7000, 4200) |
+| *Slant*, *Garage*, *Two Stacks* (Fundición) | Prefabricados › Fábrica | (-6500, 3000), (-7200, 800), (-6800, 6400) |
+| *Lockie's Lighthouse* (torre de la Soprano), *Lighthouse Keeper's Home*, *Dock House*, *Other House* (Torre) | Prefabricados › Faro y Parque Placentero | (3000, 9800), (6000, 10000), (-1200, 11000), (-3500, 9200) |
+
+Ojo: el pivote de las baldosas no está en el centro (cada baldosa a escala 10 cubre de X-4640 a X+600 y de Z-2040 a Z+3040).
 
 ## Música (Fase 5)
 
