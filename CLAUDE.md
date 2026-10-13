@@ -41,3 +41,10 @@
 - Trabaja siempre en una rama `feat/<nº-issue>-descripcion`, nunca directamente en `main`.
 - Al terminar una tarea: resume los cambios, lista los pasos `editor` que debe hacer el usuario y marca la casilla correspondiente en `ROADMAP.md`.
 - Mensajes de commit en español, cortos y en imperativo: `Añade ventana de esquiva al ataque enemigo`.
+
+## Lecciones: modelos 3D en UEFN
+- El importador OBJ de UEFN no convierte Y-arriba a Z-arriba: escribe los OBJ ya en Z-arriba (orden adelante, lado, alto).
+- Para usar una malla desde Verse: Blueprint con clase padre **Malla estática de construcción** y la malla en *Valores predeterminados de clase*; el actor colocado vale como `creative_prop`. Los Blueprints no aparecen como `creative_prop_asset` en `Assets.digest.verse`, así que no se pueden generar con `SpawnProp`: se colocan en el nivel y se mueven con `TeleportTo`.
+- En el diálogo *Importar* de Windows el campo Nombre tiene límite de caracteres: filtra por `*.obj` y usa clic + Mayús+clic para elegir varios.
+- En el selector de recurso de un campo (malla), escribir el nombre y pulsar Abajo + Intro; en el selector de actor hay que hacer clic en el resultado.
+- El buscador del panel Detalles se queda puesto al cambiar de actor: bórralo antes de editar la posición, o los campos no aparecen y Ctrl+A acaba seleccionando todo el nivel.

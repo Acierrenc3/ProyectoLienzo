@@ -1,0 +1,64 @@
+newmtl Oria_tunica
+Kd 0.850 0.300 0.180
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Oria_piel
+Kd 0.930 0.740 0.600
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Oria_ojos
+Kd 0.120 0.100 0.100
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Oria_pelo
+Kd 0.550 0.120 0.100
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Oria_botas
+Kd 0.300 0.200 0.140
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Oria_madera
+Kd 0.550 0.360 0.200
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Oria_parche
+Kd 0.950 0.900 0.780
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Oria_laton
+Kd 0.900 0.700 0.250
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+

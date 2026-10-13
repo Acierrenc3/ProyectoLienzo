@@ -1,0 +1,33 @@
+newmtl Espada_FiloDiapason_laton
+Kd 0.950 0.780 0.300
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Espada_FiloDiapason_hoja
+Kd 0.860 0.880 0.920
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Espada_FiloDiapason_mango
+Kd 0.100 0.300 0.320
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Espada_FiloDiapason_brillo
+Kd 0.550 1.000 0.850
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+Ke 0.550 1.000 0.850
+

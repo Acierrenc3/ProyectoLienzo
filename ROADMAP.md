@@ -129,10 +129,10 @@ Cada issue debe caber en **una sesión de Claude Code**: un sistema o archivo co
 
 - [x] `diseño` Historia del Acto 1, diálogos y personajes secundarios (ver `docs/HISTORIA_ACTO1.md`).
 - [x] `verse` Sistema de diálogos y misiones sencillas (eventos de historia con marcas/flags, incorporación de Joel y Kesh).
-- [x] `verse` **2 jefes** con fases y mecánicas propias (Metrónomo Roto y Soprano Hueca). *Pendiente de prueba en sesión.*
-- [x] `editor` 3 zonas conectadas con estilo visual propio (primera pasada: faro, taller y castillo como hitos; falta decorar a mano). *Pendiente de prueba.*
-- [x] `editor` ~8 tipos de enemigo repartidos por las zonas (8 normales + 2 jefes; Yunque, Fuelle, Diapasón, Eco Errante y Gárgola Coral nuevos). *Pendiente de prueba.*
-- [x] `arte` Música y ambientación (Radios con música de Fortnite: exploración, combate y jefe). *Pendiente de prueba.*
+- [x] `verse` **2 jefes** con fases y mecánicas propias (Metrónomo Roto y Soprano Hueca). 
+- [x] `editor` 3 zonas conectadas con estilo visual propio (primera pasada: faro, taller y castillo como hitos; falta decorar a mano).
+- [x] `editor` ~8 tipos de enemigo repartidos por las zonas (8 normales + 2 jefes; Yunque, Fuelle, Diapasón, Eco Errante y Gárgola Coral nuevos).
+- [x] `arte` Música y ambientación (Radios con música de Fortnite: exploración, combate y jefe).
 
 **Hecho cuando:** se puede jugar el Acto 1 de principio a fin.
 
@@ -141,6 +141,7 @@ Cada issue debe caber en **una sesión de Claude Code**: un sistema o archivo co
 ## Fase 6 — Pulido y publicación
 
 - [ ] `editor` Revisar el **presupuesto de memoria** de UEFN y el rendimiento.
+- [x] Modelos 3D propios (héroes, jefes, 8 Mudos y 5 espadas) importados y usados en la arena.
 - [ ] Pruebas con jugadores mediante códigos privados; apuntar los fallos como issues `bug`.
 - [ ] Ajuste final de dificultad y de las ventanas de esquiva y bloqueo.
 - [ ] Inscripción en el **Fortnite Creator Program**, clasificación por edades, miniatura, descripción y tráiler.

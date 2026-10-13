@@ -10,6 +10,8 @@
 #   EnemyProp        (creative_prop)                       -> modelo del 1.er enemigo en la arena
 #   ExtraEnemyProps  ([]creative_prop)                     -> modelos del 2.º y 3.er enemigo en la arena
 #   HeroProps        ([]creative_prop, opcional)           -> modelos de Joel y Kesh en la arena
+#   EnemyModels      ([]enemy_model, opcional)             -> modelos 3D por tipo de enemigo (sustituyen a los
+#                                                             props provisionales de la arena)
 #   Encounters       ([]encounter_spot)                    -> enemigos del mapa (marcador + tipos de enemigo)
 #   RestSpots        ([]rest_spot)                         -> faros de descanso
 #   Chests           ([]chest_spot)                        -> cofres con tónicos, partituras o Resina
@@ -40,6 +42,13 @@ enemy_slot := class:
     Prop:creative_prop
     Home:transform
 
+# Modelo 3D de un tipo de enemigo: un prop colocado fuera de la vista que se lleva a la arena.
+# YawDegrees: hacia dónde mira en la arena (180 = hacia la cámara y los héroes).
+enemy_model := class<concrete>:
+    @editable Kind:enemy_kind = enemy_kind.Badajo
+    @editable Prop:creative_prop = creative_prop{}
+    @editable YawDegrees:float = 180.0
+
 # Siguiente objetivo del indicador: dónde está y qué texto mostrar.
 guide_target := class:
     Position:vector3
@@ -60,6 +69,7 @@ battle_manager := class(creative_device):
     @editable EnemyProp:creative_prop = creative_prop{}
     @editable ExtraEnemyProps:[]creative_prop = array{}
     @editable HeroProps:[]creative_prop = array{}
+    @editable EnemyModels:[]enemy_model = array{}
 
     # --- Exploración (Fase 3) ---
     @editable Encounters:[]encounter_spot = array{}
@@ -127,9 +137,14 @@ battle_manager := class(creative_device):
     var MaybeGuidePos:?vector3 = false
     var GuideLabel:string = ""
     var GuideTick:int = 0
+    # Dónde se guarda cada modelo de enemigo cuando no está en la arena.
+    var ModelStorage:[]transform = array{}
 
     OnBegin<override>()<suspends>:void =
         StartTrigger.TriggeredEvent.Subscribe(OnStartTriggered)
+        set ModelStorage = for (Model : EnemyModels):
+            Model.Prop.GetTransform()
+        StoreEnemyModels()
 
         # Esperamos al jugador (juego para un solo jugador).
         var MaybePlayer:?player = false
@@ -555,15 +570,38 @@ battle_manager := class(creative_device):
 
     # --- Combate ---
 
-    # Crea los enemigos del combate con los props de la arena (máximo 3) y oculta los que sobran.
+    # Crea los enemigos del combate en los huecos de la arena (máximo 3) y oculta los que sobran.
+    # Si hay un modelo 3D para ese tipo de enemigo, ocupa el hueco en lugar del prop provisional.
     BuildEnemies(Kinds:[]enemy_kind):[]enemy_slot =
-        Props:[]creative_prop = array{EnemyProp} + ExtraEnemyProps
-        for (Index -> Prop : Props, Index >= Kinds.Length):
-            Prop.Hide()
-        for (Index -> Kind : Kinds, Prop := Props[Index]):
+        StoreEnemyModels()
+        Anchors:[]creative_prop = array{EnemyProp} + ExtraEnemyProps
+        for (Index -> Anchor : Anchors, Index >= Kinds.Length):
+            Anchor.Hide()
+        for (Index -> Kind : Kinds, Anchor := Anchors[Index]):
             Fighter := MakeEnemy(Kind)
             Fighter.ResetForBattle()
-            enemy_slot{Fighter := Fighter, Prop := Prop, Home := Prop.GetTransform()}
+            AnchorTransform := Anchor.GetTransform()
+            var Slot:enemy_slot = enemy_slot{Fighter := Fighter, Prop := Anchor, Home := AnchorTransform}
+            if (Model := FindEnemyModel[Kind]):
+                Anchor.Hide()
+                Home := transform:
+                    Translation := AnchorTransform.Translation
+                    Rotation := MakeRotationFromYawPitchRollDegrees(Model.YawDegrees, 0.0, 0.0)
+                    Scale := Model.Prop.GetTransform().Scale
+                set Slot = enemy_slot{Fighter := Fighter, Prop := Model.Prop, Home := Home}
+            Slot
+
+    # Primer modelo 3D configurado para un tipo de enemigo.
+    FindEnemyModel(Kind:enemy_kind)<decides><transacts>:enemy_model =
+        Matches := for (Model : EnemyModels, Model.Kind = Kind):
+            Model
+        Matches[0]
+
+    # Devuelve los modelos de enemigo a su sitio de guardado y los oculta.
+    StoreEnemyModels():void =
+        for (Index -> Model : EnemyModels, Storage := ModelStorage[Index]):
+            Model.Prop.Hide()
+            if (Model.Prop.TeleportTo[Storage]) {}
 
     # Combate completo: entrar en la arena, jugar las rondas y volver.
     # ReturnToSpot = true: el jugador vuelve exactamente a donde estaba.

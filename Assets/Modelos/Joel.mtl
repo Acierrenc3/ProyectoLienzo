@@ -1,0 +1,56 @@
+newmtl Joel_abrigo
+Kd 0.160 0.450 0.500
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Joel_piel
+Kd 0.800 0.600 0.450
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Joel_ojos
+Kd 0.100 0.100 0.120
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Joel_pelo
+Kd 0.150 0.120 0.100
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Joel_botas
+Kd 0.180 0.160 0.160
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Joel_diapason
+Kd 0.950 0.780 0.300
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Joel_sombrero
+Kd 0.220 0.200 0.260
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+

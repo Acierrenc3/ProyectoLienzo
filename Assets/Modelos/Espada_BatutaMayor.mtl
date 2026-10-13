@@ -1,0 +1,33 @@
+newmtl Espada_BatutaMayor_marfil
+Kd 0.950 0.930 0.850
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Espada_BatutaMayor_oro
+Kd 0.950 0.750 0.250
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Espada_BatutaMayor_mango
+Kd 0.080 0.080 0.100
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Espada_BatutaMayor_brillo
+Kd 1.000 1.000 0.850
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+Ke 1.000 1.000 0.850
+

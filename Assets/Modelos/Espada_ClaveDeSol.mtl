@@ -1,0 +1,33 @@
+newmtl Espada_ClaveDeSol_hoja
+Kd 0.800 0.840 0.920
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Espada_ClaveDeSol_oro
+Kd 0.950 0.750 0.250
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Espada_ClaveDeSol_mango
+Kd 0.400 0.100 0.180
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Espada_ClaveDeSol_brillo
+Kd 1.000 0.850 0.400
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+Ke 1.000 0.850 0.400
+

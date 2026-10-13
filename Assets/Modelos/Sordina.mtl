@@ -1,0 +1,33 @@
+newmtl Sordina_piedra
+Kd 0.600 0.600 0.640
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Sordina_piedra_oscura
+Kd 0.320 0.320 0.370
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl Sordina_brillo
+Kd 0.500 1.000 0.700
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+Ke 0.500 1.000 0.700
+
+newmtl Sordina_vendas
+Kd 0.780 0.740 0.660
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+

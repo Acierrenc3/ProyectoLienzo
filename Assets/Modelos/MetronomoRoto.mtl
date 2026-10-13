@@ -1,0 +1,49 @@
+newmtl MetronomoRoto_madera
+Kd 0.400 0.240 0.140
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl MetronomoRoto_madera_oscura
+Kd 0.220 0.130 0.080
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl MetronomoRoto_laton
+Kd 0.850 0.650 0.220
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl MetronomoRoto_esfera
+Kd 0.920 0.880 0.750
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl MetronomoRoto_ojos_brillo
+Kd 1.000 0.350 0.150
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+Ke 1.000 0.350 0.150
+
+newmtl MetronomoRoto_piedra
+Kd 0.550 0.550 0.580
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+

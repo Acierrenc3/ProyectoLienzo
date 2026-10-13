@@ -117,3 +117,12 @@ Criaturas de piedra nacidas del Silencio.
 
 ## Propiedad intelectual
 Solo tomamos la *estructura de combate* (turnos con reacciones en tiempo real), que es una mecánica de juego. Nada de nombres, personajes, historia, arte ni música de otros juegos.
+
+## Modelos 3D (Fase 6)
+
+Estilo: piezas geométricas sencillas (tornos, esferas, cilindros) con colores planos y ojos que brillan, coherente con unos enemigos que son instrumentos y objetos "enmudecidos". Todo es original y generado por código (`tools/generar_modelos.py`).
+
+- **Héroes:** Oria, Joel y Kesh (~180 cm).
+- **Jefes:** Metrónomo Roto (~4 m) y Soprano Hueca (~5 m).
+- **Mudos:** Badajo, Coro Hueco, Sordina, Yunque, Fuelle, Diapasón, Eco Errante y Gárgola Coral (0,9–2,6 m).
+- **Espadas musicales:** Clave de Sol, Corchea, Filo Diapasón, Campana Rota y Batuta Mayor. Son diseños propios inspirados en símbolos musicales, no copias de armas de otros juegos.

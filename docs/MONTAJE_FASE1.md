@@ -153,3 +153,22 @@ Tres dispositivos **Radio** junto a la consola; `battle_manager` los enciende y 
 `GuideBeacon` = **Baliza** (Dispositivos › IU, rayo de luz) y `GuideMap` = **Dispositivo indicador del mapa** (Dispositivos › IU). No hace falta colocarlos en un sitio concreto: `battle_manager` los teletransporta al siguiente objetivo y activa el pulso de dirección.
 
 Orden de los objetivos: primero los combates normales disponibles que aún no se han vencido nunca (en el orden de `Encounters`), después el evento de historia disponible y, por último, el jefe disponible. Los encuentros vencidos se guardan en `save_data.ClearedEncounters`, así que reaparecer en un faro no hace que el indicador vuelva atrás. En el HUD se muestra "Objetivo: … · N m".
+
+## Modelos 3D propios (Fase 6)
+
+Modelos originales hechos por código (`tools/generar_modelos.py`), sin recursos de terceros. Los OBJ y sus vistas previas están en `Assets/Modelos/`; en UEFN están importados en `Content/Modelos/` (malla + materiales por color).
+
+- Regenerar: `python3 tools/generar_modelos.py Assets/Modelos` y `python3 tools/previsualizar.py Assets/Modelos` (vistas `_vista.png`). Después, en UEFN: filtrar *Malla estática*, seleccionar las 18 mallas › clic derecho › **Reimportar**.
+- Ejes: el importador OBJ de UEFN no convierte Y-arriba; el generador ya escribe los vértices como (adelante, lado, alto) para que el modelo quede de pie y mirando a +X (Adelante).
+- Cada malla tiene un Blueprint `PB_<Nombre>` (clase padre **Malla estática de construcción**, `BuildingSMActor`) con la malla puesta en *Valores predeterminados de clase › Malla estática*. Colocados en el nivel, Verse los acepta como `creative_prop`.
+
+| Actor en el nivel | Uso | Posición (Izq, Arriba, Adelante) |
+|---|---|---|
+| PB Badajo, PB CoroHueco, PB Diapason, PB EcoErrante, PB Fuelle, PB GargolaCoral | Almacén de modelos de enemigo (ocultos al empezar) | Izq −2000, −1600, −1200, −800, −400, 0 · Arriba 0 · Adelante −10500 |
+| PB MetronomoRoto, PB SopranoHueca, PB Sordina, PB Yunque | Ídem | Izq 600, 1200, 1700, 2100 · Adelante −10500 |
+| PB Joel / PB Kesh | `HeroProps[0]` / `HeroProps[1]` en la arena | (−1050, 0, −8380) / (−550, 0, −8380) |
+| Graybox Wall Small C10 / C11 | Antiguos modelos provisionales de Joel y Kesh, retirados | Arriba −3000 |
+
+`battle manager` › **EnemyModels** (10 elementos, `Kind` + `Prop` + `YawDegrees` = 180): Badajo, Coro Hueco, Sordina, Metrónomo Roto, Soprano Hueca, Yunque, Fuelle, Diapasón, Eco Errante, Gárgola Coral, cada uno con su `PB`. Al empezar un combate, `BuildEnemies` lleva el modelo de cada tipo al hueco de la arena (`EnemyProp`, `ExtraEnemyProps`), oculta el prop provisional de ese hueco y lo gira hacia la cámara. Si un tipo no tiene modelo, se usa el prop provisional como antes. Al empezar la partida y antes de cada combate, los modelos vuelven al almacén ocultos.
+
+Las 5 espadas (`PB_Espada_*`) están creadas pero aún no colocadas: pensadas para el equipo de los héroes o como decoración.

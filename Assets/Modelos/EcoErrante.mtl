@@ -1,0 +1,33 @@
+newmtl EcoErrante_piedra
+Kd 0.600 0.600 0.640
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl EcoErrante_piedra_oscura
+Kd 0.320 0.320 0.370
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
+newmtl EcoErrante_brillo
+Kd 0.550 0.750 1.000
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+Ke 0.550 0.750 1.000
+
+newmtl EcoErrante_niebla
+Kd 0.800 0.840 0.920
+Ka 0 0 0
+Ks 0.05 0.05 0.05
+Ns 10
+d 1
+illum 2
+
